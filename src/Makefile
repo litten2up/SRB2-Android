@@ -362,7 +362,7 @@ $(dbg).txt : $(dbg)
 ifdef APPIMAGE
 $(appimage) : $(exe)
 	$(call Echo,Building AppImage...)
-	$(.)../AppImage_build.sh -q $(bin) $(EXENAME).AppImage ..
+	$(.)../AppImage_build.sh -q $(bin) $(EXENAME).AppImage .. appimagetool
 	$(call Echo,AppImage build complete!)
 endif
 

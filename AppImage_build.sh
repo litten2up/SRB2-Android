@@ -90,10 +90,34 @@ __PROGRAM_ASSETS=${PROGRAM_ASSETS:-$__ROOT_DIR/assets/installer}
 __BUILD_DIR=${1:-$PWD}
 __OUTPUT_FILENAME=${2:-$__PROGRAM_FILENAME.AppImage}
 
+if [[ ! -z $4 ]]; then
+	__APPIMAGETOOL="$4" # appimagetool will be automatically downloaded if the path isn't given
+fi
+
 # Stuff that prints and exits.
 
+# Prints setup text using method given by arguments.
+# Example: printSetup "print" # print "Setup for AppImage...
+function printSetup {
+	$@ "Setup for AppImage in BUILD_DIR: '$__BUILD_DIR'..."
+	$@ "With the OUTPUT_FILENAME: '$__OUTPUT_FILENAME'"
+	$@ "And SRB2 Repository Root ROOT_DIR: '$__ROOT_DIR'"
+	$@ "Using APPIMAGETOOL: '$([ -z "$__APPIMAGETOOL" ] && echo '(download)' || echo $__APPIMAGETOOL)'"
+	$@ ""
+	$@ "This should be run from a Makefile or from the directory of the build. If it is not, then change to that directory or specify that directory as an argument."
+	$@ "If ROOT_DIR isn't SRB2's repository root, specify that as an argument too."
+	$@ "Make must have built the program before you run this script."
+	$@ ""
+	$@ "Make sure these Environment Variables are correct."
+	$@ "If not, then enter: export PROGRAM_VARIABLE=value"
+	$@ "PROGRAM_NAME: $__PROGRAM_NAME"
+	$@ "PROGRAM_DESCRIPTION: $__PROGRAM_DESCRIPTION"
+	$@ "PROGRAM_FILENAME: $__PROGRAM_FILENAME"
+	$@ "PROGRAM_ASSETS: $__PROGRAM_ASSETS"
+}
+
 if [[ $helppassed ]]; then	
-	print "Usage: $(basename "$0") [OPTION]... [BUILD_DIR] [OUTPUT_NAME] [ROOT_DIR]"
+	print "Usage: $(basename "$0") [OPTION]... [BUILD_DIR] [OUTPUT_NAME] [ROOT_DIR] [APPIMAGETOOL]"
 	print "Packages a SRB2 binary into an AppImage."
 	print "OPTIONs may be included anywhere within the arguments."
 	print ""
@@ -105,20 +129,7 @@ if [[ $helppassed ]]; then
 	print "    -d, --dry               print parameters and exit."
 	print ""
 	if (( $verbosity > 0 )) || [[ $dry ]]; then
-		print "Would stage AppImage in BUILD_DIR: '$__BUILD_DIR'"
-		print "With the OUTPUT_FILENAME: '$__OUTPUT_FILENAME'"
-		print "And SRB2 Repository Root ROOT_DIR: '$__ROOT_DIR'"
-		print ""
-		print "This should be run from a Makefile or from the directory of the build. If it is not, then change to that directory or specify that directory as an argument."
-		print "If ROOT_DIR isn't SRB2's repository root, specify that as an argument too."
-		print "Make must have built the program before you run this script."
-		print ""
-		print "Make sure these Environment Variables are correct."
-		print "If not, then enter: export PROGRAM_VARIABLE=value"
-		print "PROGRAM_NAME: $__PROGRAM_NAME"
-		print "PROGRAM_DESCRIPTION: $__PROGRAM_DESCRIPTION"
-		print "PROGRAM_FILENAME: $__PROGRAM_FILENAME"
-		print "PROGRAM_ASSETS: $__PROGRAM_ASSETS"
+		printSetup "print"
 	else
 		print "This should be run from a Makefile or from the directory of the build."
 		print "Make must have built the program before you run this script."
@@ -127,20 +138,7 @@ if [[ $helppassed ]]; then
 fi
 
 if (( $verbosity > 0 )) || [[ $dry ]]; then
-	verboseOnly 0 "Staging AppImage in BUILD_DIR: '$__BUILD_DIR'..."
-	verboseOnly 0 "With the OUTPUT_FILENAME: '$__OUTPUT_FILENAME'..."
-	verboseOnly 0 "And SRB2 Repository Root ROOT_DIR: '$__ROOT_DIR'..."
-	verboseOnly 0 ""
-	verboseOnly 0 "This should be run from a Makefile or from the directory of the build. If it is not, specify that directory as an argument next time."
-	verboseOnly 0 "If ROOT_DIR isn't SRB2's repository root, specify that as an argument too."
-	verboseOnly 0 "Make must have built the program before you run this script."
-	verboseOnly 0 ""
-	verboseOnly 0 "Make sure these Environment Variables are correct."
-	verboseOnly 0 "If not, then enter this next time: export PROGRAM_VARIABLE=value"
-	verboseOnly 0 "PROGRAM_NAME: $__PROGRAM_NAME"
-	verboseOnly 0 "PROGRAM_DESCRIPTION: $__PROGRAM_DESCRIPTION"
-	verboseOnly 0 "PROGRAM_FILENAME: $__PROGRAM_FILENAME"
-	verboseOnly 0 "PROGRAM_ASSETS: $__PROGRAM_ASSETS"
+	printSetup "verboseOnly" "0"
 	verboseOnly 0 ""
 
 	if [[ $dry ]]; then
@@ -218,25 +216,40 @@ chmod +x ./AppRun
 cd ..
 
 # Package AppImage
-verboseOnly 1 "Downloading appimagetool..."
+if [ -z "$__APPIMAGETOOL" ] || (! command -v $__APPIMAGETOOL &> /dev/null); then
+	verboseOnly 1 "No valid appimagetool path given, downloading appimagetool..."
 
-url="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
-(( verbosity >= 3 )) && wget $url || wget -q $url
+	# Print notice for internet connection.
+	printf $NOTICE
+	echo "If the command hangs here, check your internet connection, or download appimagetool and add it to your \$PATH and try compiling again."
+	printf $RESET;
 
-chmod a+x appimagetool-x86_64.AppImage
+	url="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+	(( verbosity >= 3 )) && wget $url || wget -q $url
+
+	APPIMAGETOOL=./appimagetool-x86_64.AppImage
+	chmod a+x $APPIMAGETOOL
+else
+	verboseOnly 1 "appimagetool path given, no download required."
+	APPIMAGETOOL=$__APPIMAGETOOL
+fi
+
 verboseOnly 1 "Packing AppImage $__OUTPUT_FILENAME"
 
 if (( verbosity >= 3 )); then
-	./appimagetool-x86_64.AppImage ./AppDir $__OUTPUT_FILENAME
+	$APPIMAGETOOL ./AppDir $__OUTPUT_FILENAME
 elif (( verbosity >= 2 )); then
-	./appimagetool-x86_64.AppImage ./AppDir $__OUTPUT_FILENAME >/dev/null
+	$APPIMAGETOOL ./AppDir $__OUTPUT_FILENAME >/dev/null
 else
-	./appimagetool-x86_64.AppImage ./AppDir $__OUTPUT_FILENAME >/dev/null 2>&1
+	$APPIMAGETOOL ./AppDir $__OUTPUT_FILENAME >/dev/null 2>&1
 fi
 
 success "AppImage ready!"
 verboseOnly 1 "Cleaning up files..."
 rm -r ./AppDir
-rm ./appimagetool-x86_64.AppImage
+
+if [ -z "$__APPIMAGETOOL" ]; then
+	rm ./appimagetool-x86_64.AppImage
+fi
 
 cd $__ROOT_DIR
