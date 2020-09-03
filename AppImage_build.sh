@@ -169,9 +169,11 @@ cp -r $__BUILD_DIR/$__PROGRAM_FILENAME $__BUILD_DIR/AppDir/usr/bin
 # Copy required dependencies, but only if the program is dynamically linked.
 verboseOnly 1 "Testing if this build is dynamically linked..."
 set +e # Disable auto-exit for ldd.
-ldd $__BUILD_DIR/$__PROGRAM_FILENAME > /dev/null
+ldd $__BUILD_DIR/$__PROGRAM_FILENAME >> /dev/null
+exitcode=$?
 set -e
-if [ $? -eq 0 ]; then
+if (( exitcode == 0 )); then
+	verboseOnly 1 "This build *is* dynamically linked! Continuing with Python script."
 	__LDD_LIST=$(python3 "$__ROOT_DIR/AppImage_prunedepends.py" "$__BUILD_DIR/$__PROGRAM_FILENAME")
 	IFS=' ' read -r -a paths <<< "$__LDD_LIST"
 	for path in "${paths[@]}";
