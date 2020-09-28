@@ -20,6 +20,7 @@ __WHITELIST = [
     'libpulse',
     'libmodplug',
     'libvorbisfile',
+    'libopusfile',
     'libFLAC',
     'libmad',
     'libmpg123',
