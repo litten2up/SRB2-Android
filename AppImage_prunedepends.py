@@ -26,6 +26,7 @@ __WHITELIST = [
     'libvorbis',
     'libpulsecommon',
     'libsndfile',
+    'libsndio',
     'libogg',
     'libvorbisenc',
     'libjson',
