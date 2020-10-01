@@ -35,6 +35,8 @@ function parseSingleDashArg() {
 			verbosity=$((verbosity + 1))
 		elif [[ $char == 'd' ]]; then
 			dry=1
+		elif [[ $char == 's' ]]; then
+			small=1
 		else
 			echo "$0: invalid option -- '$1'"
 			echo "Try '$0 --help' for more information."
@@ -57,6 +59,9 @@ for arg in "$@"; do # For $arg in the argument array...
 		set -- "${@:1:$currentarg-1}" "${@:$currentarg+1}"; # Remove argument from list
 	elif [[ $arg == "--dry" ]]; then
 		dry=1; # Show parameters instead of using them.
+		set -- "${@:1:$currentarg-1}" "${@:$currentarg+1}"; # Remove argument from list
+	elif [[ $arg == "--small" ]]; then
+		small=1; # Don't copy assets to save on bandwidth.
 		set -- "${@:1:$currentarg-1}" "${@:$currentarg+1}"; # Remove argument from list
 	elif [[ ! $arg == *'--'* && $arg == *'-'* ]]; then
 		parseSingleDashArg $arg
@@ -124,7 +129,8 @@ if [[ $helppassed ]]; then
 	print "Arguments:"
 	print "    -h, --help              display this help and exit."
 	print "    -q, --quiet             don't display any text."
-	print "    -v, --verbose           make commands more verbose, will always print"
+	print "    -v, --verbose           make commands more verbose, will always print."
+	print "    -s, --small             don't copy SRB2 assets to save on bandwidth."
 	print "                            parameters regardless of --dry."
 	print "    -d, --dry               print parameters and exit."
 	print ""
@@ -159,9 +165,16 @@ mkdir -p $__BUILD_DIR/AppDir/usr/share/applications
 mkdir -p $__BUILD_DIR/AppDir/usr/share/icons/hicolor/256x256/apps
 
 # Copy program data
-verboseOnly 1 "Packaging program data..."
+if [[ ! $small ]]; then
+	verboseOnly 1 "Packaging program assets..."
+	cp -r $__PROGRAM_ASSETS/* $__BUILD_DIR/AppDir/usr/bin/
+	cp -r $__BUILD_DIR/$__PROGRAM_FILENAME $__BUILD_DIR/AppDir/usr/bin
+else
+	verboseOnly 1 "Skipping program asset packing, --small or -s passed..."
+fi
+
+verboseOnly 1 "Packaging SRB2..."
 verboseOnly 1 "Assuming executable name $__PROGRAM_FILENAME"
-cp -r $__PROGRAM_ASSETS/* $__BUILD_DIR/AppDir/usr/bin/
 cp -r $__BUILD_DIR/$__PROGRAM_FILENAME $__BUILD_DIR/AppDir/usr/bin
 
 # Copy required dependencies, but only if the program is dynamically linked.
@@ -220,9 +233,7 @@ if [ -z "$__APPIMAGETOOL" ] || (! command -v $__APPIMAGETOOL &> /dev/null); then
 	verboseOnly 1 "No valid appimagetool path given, downloading appimagetool..."
 
 	# Print notice for internet connection.
-	printf $NOTICE
-	echo "If the command hangs here, check your internet connection, or download appimagetool and add it to your \$PATH and try compiling again."
-	printf $RESET;
+	important "If the command hangs here, check your internet connection, or download appimagetool and add it to your \$PATH and try compiling again."
 
 	url="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
 	(( verbosity >= 3 )) && wget $url || wget -q $url
