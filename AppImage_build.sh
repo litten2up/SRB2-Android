@@ -121,7 +121,7 @@ function printSetup {
 	$@ "PROGRAM_ASSETS: $__PROGRAM_ASSETS"
 }
 
-if [[ $helppassed ]]; then	
+if [[ $helppassed ]]; then
 	print "Usage: $(basename "$0") [OPTION]... [BUILD_DIR] [OUTPUT_NAME] [ROOT_DIR] [APPIMAGETOOL]"
 	print "Packages a SRB2 binary into an AppImage."
 	print "OPTIONs may be included anywhere within the arguments."
