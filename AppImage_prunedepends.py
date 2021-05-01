@@ -33,7 +33,8 @@ __WHITELIST = [
     'libjson',
     'libreadline',
     'libwrap',
-    'libtinfo'
+    'libtinfo',
+    'libpng16'
 ]
 
 if len(sys.argv) < 2:
