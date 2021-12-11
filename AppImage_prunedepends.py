@@ -11,6 +11,7 @@ import re
 import os
 
 __WHITELIST = [
+    'libnsl',
     'libSDL2',
     'libSDL2_mixer',
     'libgme',
@@ -34,6 +35,7 @@ __WHITELIST = [
     'libreadline',
     'libwrap',
     'libtinfo',
+    'libtirpc',
     'libpng16'
 ]
 
