@@ -67,7 +67,7 @@ for line in ldd:
 
     # Perform basename because a depend may have a path prefix
     #if os.path.basename(keyval[0]) not in exlist:
-    if any([(os.path.basename(keyval[0]).find(s) > -1) for s in __WHITELIST]):
-        deps.append(keyval[1])
+    #if any([(os.path.basename(keyval[0]).find(s) > -1): for s in __WHITELIST]):
+    deps.append(keyval[1])
 
 print(' '.join(deps))
