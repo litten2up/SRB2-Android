@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ android-port android-test]
+    branches: [ android-test]
   pull_request:
-    branches: [ android-port android-test]
+    branches: [ android-test]
 
 jobs:
   build:
