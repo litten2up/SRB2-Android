@@ -58,6 +58,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <data android:scheme="app" android:host="open.my.app" />
             </intent-filter>
         </activity>
     </application>
