@@ -120,7 +120,6 @@
 extern FILE *logstream;
 extern char logfilename[1024];
 #endif
-
 /* A mod name to further distinguish versions. */
 #define SRB2APPLICATION "SRB2"
 
