@@ -11,13 +11,13 @@ android {
     compileSdkVersion 26
     defaultConfig {
         if (buildAsApplication) {
-            applicationId "org.stjr.srb2"
+            applicationId "org.stjr.srb2pre"
         }
 
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 22100
-        versionName "2.2.10"
+        versionCode 22110
+        versionName "2.2.11"
         externalNativeBuild {
             ndkBuild {
                 arguments "APP_PLATFORM=android-16"
