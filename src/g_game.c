@@ -3908,7 +3908,7 @@ static void G_HandleSaveLevel(void)
 					remove(liveeventbackup);
 				cursaveslot = 0;
 			}
-			else if ((!modifiedgame || savemoddata || cursaveslot==10) && !(netgame || multiplayer || ultimatemode || demorecording || metalrecording || modeattacking))
+			else if ((!modifiedgame || savemoddata || cursaveslot>=10) && !(netgame || multiplayer || ultimatemode || demorecording || metalrecording || modeattacking))
 				G_SaveGame((UINT32)cursaveslot, spstage_start);
 		}
 	}
