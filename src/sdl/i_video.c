@@ -88,7 +88,7 @@
 
 // maximum number of windowed modes (see windowedModes[][])
 #define MAXWINMODES (18)
-#undef INT32;
+
 /**	\brief
 */
 static INT32 numVidModes = -1;
