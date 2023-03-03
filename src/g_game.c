@@ -3914,7 +3914,7 @@ static void G_HandleSaveLevel(void)
 	}
 	// and doing THIS here means you don't lose your progress if you close the game mid-intermission
 	else if (!(ultimatemode || netgame || multiplayer || demoplayback || demorecording || metalrecording || modeattacking)
-		&& (!modifiedgame || savemoddata || cursaveslot == 10) && cursaveslot > 0 && CanSaveLevel(lastmap+1))
+		&& (!modifiedgame || savemoddata || cursaveslot >= 10) && cursaveslot > 0 && CanSaveLevel(lastmap+1))
 		G_SaveGame((UINT32)cursaveslot, lastmap+1); // not nextmap+1 to route around special stages
 }
 
