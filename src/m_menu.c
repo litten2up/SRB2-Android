@@ -11367,7 +11367,6 @@ static void M_StartTutorial(INT32 choice)
 	cursaveslot = 0;
 	G_DeferedInitNew(false, G_BuildMapName(tutorialmap), 0, false, false);
 }
-
 // ==============
 // LOAD GAME MENU
 // ==============
@@ -12142,7 +12141,30 @@ static void M_HandleLoadSave(INT32 choice)
 			break;
 
 		case KEY_ENTER:
-			M_SaveSelectConfirm();
+			if (ultimate_selectable && saveSlotSelected == NOSAVESLOT && !savemoddata && !modifiedgame)
+			{
+				loadgamescroll = 0;
+				S_StartSound(NULL, sfx_skid);
+				M_StartMessage("Are you sure you want to play\n\x85ultimate mode\x80? It isn't remotely fair,\nand you don't even get an emblem for it.\n\n(Press 'Y' to confirm)\n",M_SaveGameUltimateResponse,MM_YESNO);
+			}
+			else if (saveSlotSelected != NOSAVESLOT && saveSlotSelected != 10 && savegameinfo[saveSlotSelected-1].lives == -42 && !(!modifiedgame || savemoddata))
+			{
+				loadgamescroll = 0;
+				S_StartSound(NULL, sfx_skid);
+				M_StartMessage(M_GetText("This cannot be done in a modified game.\n\n(Press a key)\n"), NULL, MM_NOTHING);
+			}
+			else if (saveSlotSelected == NOSAVESLOT || savegameinfo[saveSlotSelected-1].lives != -666) // don't allow loading of "bad saves"
+			{
+				loadgamescroll = 0;
+				S_StartSound(NULL, sfx_menu1);
+				M_LoadSelect(saveSlotSelected);
+			}
+			else if (!loadgameoffset)
+			{
+				S_StartSound(NULL, sfx_lose);
+				loadgameoffset = 14 * FRACUNIT;
+			}
+
 			break;
 
 		case KEY_ESCAPE:
