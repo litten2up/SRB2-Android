@@ -7,3 +7,8 @@ music.dta
 music_new.dta
 *.bak
 *.bat
+models
+models.dat
+LICENSE*.txt
+README*.txt
+latest-log.txt
