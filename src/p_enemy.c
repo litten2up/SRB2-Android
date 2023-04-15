@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // Copyright (C) 1993-1996 by id Software, Inc.
 // Copyright (C) 1998-2000 by DooM Legacy Team.
-// Copyright (C) 1999-2022 by Sonic Team Junior.
+// Copyright (C) 1999-2023 by Sonic Team Junior.
 //
 // This program is free software distributed under the
 // terms of the GNU General Public License, version 2.
@@ -13458,6 +13458,9 @@ static boolean PIT_DustDevilLaunch(mobj_t *thing)
 	player_t *player = thing->player;
 
 	if (!player)
+		return true;
+
+	if (player->spectator)
 		return true;
 
 	if (player->powers[pw_carry] != CR_DUSTDEVIL && (player->powers[pw_ignorelatch] & (1<<15)))

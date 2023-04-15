@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // Copyright (C) 1993-1996 by id Software, Inc.
 // Copyright (C) 1998-2000 by DooM Legacy Team.
-// Copyright (C) 1999-2022 by Sonic Team Junior.
+// Copyright (C) 1999-2023 by Sonic Team Junior.
 //
 // This program is free software distributed under the
 // terms of the GNU General Public License, version 2.
@@ -262,13 +262,15 @@ boolean P_DoSpring(mobj_t *spring, mobj_t *object)
 			}
 			else
 			{
-				INT32 pflags = object->player->pflags & (PF_JUMPED|PF_NOJUMPDAMAGE|PF_SPINNING|PF_THOKKED|PF_BOUNCING); // Not identical to below...
+				INT32 pflags = object->player->pflags & (PF_JUMPED|PF_NOJUMPDAMAGE|PF_SPINNING|PF_THOKKED|PF_BOUNCING|PF_CANCARRY); // Not identical to below...
 				UINT8 secondjump = object->player->secondjump;
+				UINT16 tailsfly = object->player->powers[pw_tailsfly];
 				if (object->player->pflags & PF_GLIDING)
 					P_SetPlayerMobjState(object, S_PLAY_FALL);
 				P_ResetPlayer(object->player);
 				object->player->pflags |= pflags;
 				object->player->secondjump = secondjump;
+				object->player->powers[pw_tailsfly] = tailsfly;
 			}
 		}
 

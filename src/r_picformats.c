@@ -1,8 +1,8 @@
 // SONIC ROBO BLAST 2
 //-----------------------------------------------------------------------------
 // Copyright (C) 1993-1996 by id Software, Inc.
-// Copyright (C) 2018-2022 by Jaime Ita Passos.
-// Copyright (C) 2019-2022 by Sonic Team Junior.
+// Copyright (C) 2018-2023 by Jaime Ita Passos.
+// Copyright (C) 2019-2023 by Sonic Team Junior.
 //
 // This program is free software distributed under the
 // terms of the GNU General Public License, version 2.
@@ -829,6 +829,17 @@ boolean Picture_IsLumpPNG(const UINT8 *d, size_t s)
 
 #ifndef NO_PNG_LUMPS
 #ifdef HAVE_PNG
+
+/*#if PNG_LIBPNG_VER_DLLNUM < 14
+typedef PNG_CONST png_byte *png_const_bytep;
+#endif*/
+typedef struct
+{
+	const UINT8 *buffer;
+	UINT32 size;
+	UINT32 position;
+} png_io_t;
+
 static void PNG_IOReader(png_structp png_ptr, png_bytep data, png_size_t length)
 {
 	png_io_t *f = png_get_io_ptr(png_ptr);
