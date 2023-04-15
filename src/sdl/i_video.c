@@ -241,7 +241,6 @@ static INT32 windowedModes[MAXWINMODES][2] =
 };
 
 static char vidModeName[MAXWINMODES][32];
-static const char *fallback_resolution_name = "Fallback";
 
 #define VIDEO_INIT_ERROR(str) { \
 	if (!graphics_started) \
