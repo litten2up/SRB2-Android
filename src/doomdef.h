@@ -187,7 +187,6 @@ extern char logfilename[1024];
 #define VIRTUAL_KEYBOARD
 #endif
 
-
 // Enforce a limit of loaded WAD files.
 //#define ENFORCE_WAD_LIMIT
 
