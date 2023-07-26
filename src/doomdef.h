@@ -144,7 +144,7 @@ extern char logfilename[1024];
 #define HAVE_GL_FRAMEBUFFER
 #endif
 
-//#define DEVELOP // Disable this for release builds to remove excessive cheat commands and enable MD5 checking and stuff, all in one go. :3
+// #define DEVELOP // Disable this for release builds to remove excessive cheat commands and enable MD5 checking and stuff, all in one go. :3
 #ifdef DEVELOP
 #define VERSIONSTRING "Development EXE"
 #define VERSIONSTRING_RC "Development EXE" "\0"
@@ -167,6 +167,10 @@ extern char logfilename[1024];
 
 /* A custom URL protocol for server links. */
 #define SERVER_URL_PROTOCOL "srb2://"
+
+// Is this a april fools day release
+// Comment or uncomment this as necessary.
+#define APRIL_FOOLS
 
 // Does this version require an added patch file?
 // Comment or uncomment this as necessary.
