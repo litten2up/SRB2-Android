@@ -1551,12 +1551,12 @@ static menuitem_t OP_P1ControlsMenu[] =
 	{IT_SUBMENU | IT_STRING, NULL, "Touch Screen Options...", &OP_TouchOptionsDef, 40},
 #else
 	{IT_GRAYEDOUT,           NULL, "Touch Screen Options...",    NULL,                40},
-#endif
 
 	{IT_SUBMENU | IT_STRING, NULL, "Camera Options...", &OP_CameraOptionsDef, 60},
 
 	{IT_STRING  | IT_CVAR,   NULL, "Automatic braking", &cv_autobrake, 80},
 	{IT_CALL    | IT_STRING, NULL, "Play Style...", M_Setup1PPlaystyleMenu, 90},
+#endif
 
 	// Accelerometer settings
 #ifdef ACCELEROMETER
