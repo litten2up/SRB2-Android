@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // Copyright (C) 1993-1996 by id Software, Inc.
 // Copyright (C) 1998-2000 by DooM Legacy Team.
-// Copyright (C) 1999-2022 by Sonic Team Junior.
+// Copyright (C) 1999-2023 by Sonic Team Junior.
 //
 // This program is free software distributed under the
 // terms of the GNU General Public License, version 2.
@@ -5299,6 +5299,7 @@ static void P_ConvertBinaryLinedefTypes(void)
 		case 433: //Enable/disable gravity flip
 			lines[i].args[0] = !!(lines[i].flags & ML_NOCLIMB);
 			lines[i].args[1] = !!(lines[i].flags & ML_SKEWTD);
+			lines[i].args[2] = !!(lines[i].flags & ML_BLOCKMONSTERS);
 			break;
 		case 434: //Award power-up
 			if (sides[lines[i].sidenum[0]].text)
@@ -7945,8 +7946,10 @@ static lumpinfo_t* FindFolder(const char *folName, UINT16 *start, UINT16 *end, l
 // Add a wadfile to the active wad files,
 // replace sounds, musics, patches, textures, sprites and maps
 //
-static boolean P_LoadAddon(UINT16 wadnum, UINT16 numlumps)
+static boolean P_LoadAddon(UINT16 numlumps)
 {
+	const UINT16 wadnum = (UINT16)(numwadfiles-1);
+
 	size_t i, j, sreplaces = 0, mreplaces = 0, digmreplaces = 0;
 	char *name;
 	lumpinfo_t *lumpinfo;
@@ -7967,6 +7970,12 @@ static boolean P_LoadAddon(UINT16 wadnum, UINT16 numlumps)
 //	UINT16 patPos, patNum = 0;
 //	UINT16 flaPos, flaNum = 0;
 //	UINT16 mapPos, mapNum = 0;
+
+	if (numlumps == INT16_MAX)
+	{
+		refreshdirmenu |= REFRESHDIR_NOTLOADED;
+		return false;
+	}
 
 	switch(wadfiles[wadnum]->type)
 	{
@@ -8138,32 +8147,12 @@ static boolean P_LoadAddon(UINT16 wadnum, UINT16 numlumps)
 
 boolean P_AddWadFile(const char *wadfilename)
 {
-	UINT16 numlumps, wadnum;
-
-	// Init file.
-	if ((numlumps = W_InitFile(wadfilename, false, false)) == INT16_MAX)
-	{
-		refreshdirmenu |= REFRESHDIR_NOTLOADED;
-		return false;
-	}
-	else
-		wadnum = (UINT16)(numwadfiles-1);
-
-	return P_LoadAddon(wadnum, numlumps);
+	return D_CheckPathAllowed(wadfilename, "tried to add file") &&
+		P_LoadAddon(W_InitFile(wadfilename, false, false));
 }
 
 boolean P_AddFolder(const char *folderpath)
 {
-	UINT16 numlumps, wadnum;
-
-	// Init file.
-	if ((numlumps = W_InitFolder(folderpath, false, false)) == INT16_MAX)
-	{
-		refreshdirmenu |= REFRESHDIR_NOTLOADED;
-		return false;
-	}
-	else
-		wadnum = (UINT16)(numwadfiles-1);
-
-	return P_LoadAddon(wadnum, numlumps);
+	return D_CheckPathAllowed(folderpath, "tried to add folder") &&
+		P_LoadAddon(W_InitFolder(folderpath, false, false));
 }

@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // Copyright (C) 1993-1996 by id Software, Inc.
 // Copyright (C) 1998-2000 by DooM Legacy Team.
-// Copyright (C) 1999-2022 by Sonic Team Junior.
+// Copyright (C) 1999-2023 by Sonic Team Junior.
 //
 // This program is free software distributed under the
 // terms of the GNU General Public License, version 2.
@@ -420,7 +420,20 @@ boolean P_DoSpring(mobj_t *spring, mobj_t *object)
 				P_SetPlayerMobjState(object, S_PLAY_ROLL);
 		}
 		else
-			pflags = object->player->pflags & (PF_STARTJUMP|PF_JUMPED|PF_NOJUMPDAMAGE|PF_SPINNING|PF_THOKKED|PF_BOUNCING); // I still need these.
+		{
+			boolean wasSpindashing = object->player->dashspeed > 0 && (object->player->charability2 == CA2_SPINDASH);
+
+			pflags = object->player->pflags & (PF_STARTJUMP | PF_JUMPED | PF_NOJUMPDAMAGE | PF_SPINNING | PF_THOKKED | PF_BOUNCING); // I still need these.
+
+			if (wasSpindashing) // Ensure we're in the rolling state, and not spindash.
+				P_SetPlayerMobjState(object, S_PLAY_ROLL);
+
+			if (object->player->charability == CA_GLIDEANDCLIMB && object->player->skidtime && (pflags & PF_JUMPED))
+			{
+				object->player->skidtime = 0; // No skidding should be happening, either.
+				pflags &= ~PF_JUMPED;
+			}
+		}
 		secondjump = object->player->secondjump;
 		washoming = object->player->homing;
 		P_ResetPlayer(object->player);
