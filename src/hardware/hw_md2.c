@@ -1448,15 +1448,13 @@ boolean HWR_DrawModel(gl_vissprite_t *spr)
 				return false;
 			}
 		}
-/*
 		if (!md2->model->hasVBOs)
 		{
 			HWD.pfnCreateModelVBOs(md2->model);
 			md2->model->hasVBOs = true;
 		}
 
-		finalscale = md2->scale;
-*/
+		//finalscale = md2->scale;
 		//HWD.pfnSetBlend(blend); // This seems to actually break translucency?
 		//Hurdler: arf, I don't like that implementation at all... too much crappy
 
