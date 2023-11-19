@@ -2228,8 +2228,8 @@ INT32 I_StartupSystem(void)
 		PTMSYSM_ConfigureNew3DSCPU(3);
 		osSetSpeedupEnable(true);
 	}
-	//gfxInitDefault();
-	//consoleInit(GFX_BOTTOM, NULL);
+	gfxInitDefault();
+	consoleInit(GFX_BOTTOM, NULL);
 #endif
 	SDL_version SDLcompiled;
 	SDL_version SDLlinked;
