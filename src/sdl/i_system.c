@@ -149,6 +149,9 @@ typedef LPVOID (WINAPI *p_MapViewOfFile) (HANDLE, DWORD, DWORD, DWORD, SIZE_T);
 #include <time.h>
 #define UNIXBACKTRACE
 #endif
+#ifdef __3DS__
+#include <3ds.h>
+#endif
 
 // Locations to directly check for srb2.pk3 in
 const char *wadDefaultPaths[] = {
@@ -2217,6 +2220,17 @@ void I_SetupSignalHandler(void)
 
 INT32 I_StartupSystem(void)
 {
+#ifdef __3DS__
+	if (PTMSYSM_CheckNew3DS())
+	{
+		osSetSpeedupEnable(true);
+		// enable fast clock + L2 cache on new3ds
+		PTMSYSM_ConfigureNew3DSCPU(3);
+		osSetSpeedupEnable(true);
+	}
+	//gfxInitDefault();
+	//consoleInit(GFX_BOTTOM, NULL);
+#endif
 	SDL_version SDLcompiled;
 	SDL_version SDLlinked;
 	SDL_VERSION(&SDLcompiled)
@@ -2231,7 +2245,7 @@ INT32 I_StartupSystem(void)
 	 SDLcompiled.major, SDLcompiled.minor, SDLcompiled.patch);
 	I_OutputMsg("Linked with SDL version: %d.%d.%d\n",
 	 SDLlinked.major, SDLlinked.minor, SDLlinked.patch);
-	if (SDL_Init(0) < 0)
+	if (SDL_Init(SDL_INIT_TIMER) < 0)
 		I_Error("SRB2: SDL System Error: %s", SDL_GetError()); //Alam: Oh no....
 #ifndef NOMUMBLE
 	I_SetupMumble();
@@ -2984,6 +2998,10 @@ static const char *initialwaddir = NULL;
 
 const char *I_LocateWad(void)
 {
+#ifdef __3DS__
+	chdir("sdmc:/3ds/srb2");
+	return "sdmc:/3ds/srb2";
+#else
 	const char *waddir;
 
 	I_OutputMsg("Looking for WADs in: ");
@@ -3002,6 +3020,7 @@ const char *I_LocateWad(void)
 	}
 
 	return waddir;
+#endif
 }
 
 const char *I_InitialLocateWad(void)
@@ -3182,6 +3201,10 @@ size_t I_GetFreeMem(size_t *total)
 	if (total)
 		*total = totalKBytes << 10;
 	return freeKBytes << 10;
+#elif defined (__3DS__)
+	if (total)
+		*total = 178 * 1024 * 1024;
+	return linearSpaceFree() + vramSpaceFree();
 #else
 	// Guess 48 MB.
 	if (total)

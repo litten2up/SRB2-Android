@@ -7,7 +7,7 @@ EXENAME?=lsdl2srb2
 opts+=-DUNIXCOMMON -DLUA_USE_POSIX
 # Use -rdynamic so a backtrace log shows function names
 # instead of addresses
-libs+=-lm -rdynamic
+#libs+=-lm -rdynamic
 
 ifndef NOHW
 opts+=-I/usr/X11R6/include
@@ -18,7 +18,7 @@ SDL?=1
 
 # In common usage.
 ifdef LINUX
-libs+=-lrt
+#libs+=-lrt
 passthru_opts+=NOTERMIOS
 endif
 
