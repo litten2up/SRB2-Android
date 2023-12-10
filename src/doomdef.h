@@ -768,7 +768,6 @@ extern int
 #define NEWCLIP
 
 /// OpenGL shaders
-#define GL_SHADERS
 
 #if defined(HAVE_GLES2) && !defined(GL_SHADERS)
 #define GL_SHADERS

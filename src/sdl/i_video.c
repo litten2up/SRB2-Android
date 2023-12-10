@@ -2100,12 +2100,12 @@ static SDL_bool Impl_CreateWindow(SDL_bool fullscreen)
 		flags |= SDL_WINDOW_BORDERLESS;
 
 #ifdef HWRENDER
-	flags |= SDL_WINDOW_OPENGL;
+	//flags |= SDL_WINDOW_OPENGL;
 
 	// Without a 24-bit depth buffer many visuals are ruined by z-fighting.
 	// Some GPU drivers may give us a 16-bit depth buffer since the
 	// default value for SDL_GL_DEPTH_SIZE is 16.
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	//SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 #endif
 
 #if defined(__ANDROID__)
@@ -2407,7 +2407,7 @@ static void Impl_InitOpenGL(void)
 	if (vid.glstate == VID_GL_LIBRARY_LOADED)
 		return;
 
-#if defined(__ANDROID__)
+#if defined(__ANDROID__) || defined(__N3DS__)
 	// Force PO2-sized textures on mobile GPUs
 	gl_powersoftwo = true;
 #endif

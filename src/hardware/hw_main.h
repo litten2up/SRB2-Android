@@ -84,7 +84,9 @@ void HWR_LoadAllCustomShaders(void);
 void HWR_LoadCustomShadersFromFile(UINT16 wadnum, boolean PK3);
 const char *HWR_GetShaderName(INT32 shader);
 
+#ifdef GL_SHADERS
 extern customshaderxlat_t shaderxlat[];
+#endif
 
 extern CV_PossibleValue_t glanisotropicmode_cons_t[];
 

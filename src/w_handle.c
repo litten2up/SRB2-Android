@@ -44,7 +44,7 @@ int File_Close(void *stream)
 
 int File_CheckError(void *stream)
 {
-	return ferror(stream);
+	//return ferror(stream);
 }
 
 #else

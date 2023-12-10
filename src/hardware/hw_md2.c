@@ -1578,7 +1578,9 @@ boolean HWR_DrawModel(gl_vissprite_t *spr)
 			flags |= (PF_Occlude | PF_Masked);
 
 		GPU->SetBlend(flags);
+#ifdef GL_SHADERS
 		GPU->SetShader(SHADER_MODEL);
+#endif
 
 		{
 			float this_scale = FIXED_TO_FLOAT(interp.scale);
@@ -1598,7 +1600,9 @@ boolean HWR_DrawModel(gl_vissprite_t *spr)
 		}
 	}
 
+#ifdef GL_SHADERS
 	GPU->SetShader(SHADER_DEFAULT);
+#endif
 
 	return true;
 }

@@ -20,6 +20,7 @@
 #ifdef GL_SHADERS
 #include "../shaders/gl_shaders.h"
 #endif
+#include "../hw_drv.h"
 
 #include <stdarg.h>
 
@@ -2182,7 +2183,6 @@ void GLExtension_Init(void)
 #ifdef GL_SHADERS
 	if (GLExtension_vertex_program && GLExtension_fragment_program && GLBackend_GetFunction("glUseProgram"))
 		GLExtension_shaders = true;
-#endif
 
 	if (GLExtension_texture_filter_anisotropic)
 	{
@@ -2198,6 +2198,7 @@ void GLExtension_Init(void)
 		maximumAnisotropy = 1;
 
 	glanisotropicmode_cons_t[1].value = maximumAnisotropy;
+#endif
 }
 
 boolean GLExtension_Available(const char *extension)

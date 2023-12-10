@@ -17,7 +17,7 @@ endif
 ifndef NOHW
 opts+=-DHWRENDER
 sources+=$(call List,hardware/Sourcefile)
-sources+=hardware/r_opengl/r_opengl.c
+sources+=hardware/r_gles/r_gles1.c
 endif
 
 ifndef NOMD5

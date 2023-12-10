@@ -13,6 +13,7 @@
 #include "../r_glcommon/r_glcommon.h"
 #include "../../r_local.h" // For rendertimefrac, used for the leveltime shader uniform
 
+#ifdef GL_SHADERS
 boolean gl_shadersenabled = false;
 hwdshaderoption_t gl_allowshaders = HWD_SHADEROPTION_OFF;
 
@@ -980,3 +981,4 @@ void Shader_SetSampler(gluniform_t uniform, GLint value)
 	if (shader->uniforms[uniform] != -1)
 		gl_Uniform1i(shader->uniforms[uniform], value);
 }
+#endif

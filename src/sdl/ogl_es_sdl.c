@@ -34,9 +34,9 @@
 #include "hwsym_sdl.h"
 #include "../m_argv.h"
 
-PFNglClear pglClear;
-PFNglGetIntegerv pglGetIntegerv;
-PFNglGetString pglGetString;
+//PFNglClear pglClear;
+//PFNglGetIntegerv pglGetIntegerv;
+//PFNglGetString pglGetString;
 
 /**	\brief SDL video display surface
 */
@@ -44,21 +44,24 @@ SDL_GLContext sdlglcontext = 0;
 
 void *GLBackend_GetFunction(const char *proc)
 {
-	return SDL_GL_GetProcAddress(proc);
+	//return SDL_GL_GetProcAddress(proc);
+	return;
 }
 
 boolean GLBackend_Init(void)
 {
-	if (SDL_GL_LoadLibrary(NULL) != 0)
-	{
-		CONS_Alert(CONS_ERROR, "Could not load OpenGL Library: %s\nFalling back to Software mode.\n", SDL_GetError());
-		return 0;
-	}
+	//if (SDL_GL_LoadLibrary(NULL) != 0)
+	//{
+	//	CONS_Alert(CONS_ERROR, "Could not load OpenGL Library: %s\nFalling back to Software mode.\n", SDL_GetError());
+	//	return 0;
+	//}
 
-	if (!GLBackend_InitContext())
-		return false;
+	//if (!GLBackend_InitContext())
+	//	return false;
 
-	return GLBackend_LoadFunctions();
+	//return GLBackend_LoadFunctions();
+	
+	return true;
 }
 
 /**	\brief	The OglSdlSurface function
@@ -70,7 +73,7 @@ boolean GLBackend_Init(void)
 */
 boolean OglSdlSurface(INT32 w, INT32 h)
 {
-	GLBackend_SetSurface(w, h);
+	//GLBackend_SetSurface(w, h);
 	return true;
 }
 
@@ -89,8 +92,8 @@ void OglSdlFinishUpdate(boolean waitvbl)
 	int sdlw, sdlh;
 
 	static boolean oldwaitvbl = false;
-	if (oldwaitvbl != waitvbl)
-		SDL_GL_SetSwapInterval(waitvbl ? 1 : 0);
+	//if (oldwaitvbl != waitvbl)
+	//	SDL_GL_SetSwapInterval(waitvbl ? 1 : 0);
 
 	oldwaitvbl = waitvbl;
 
@@ -118,7 +121,7 @@ void OglSdlFinishUpdate(boolean waitvbl)
 	}
 #endif
 
-	SDL_GL_SwapWindow(window);
+	//SDL_GL_SwapWindow(window);
 	GPU->GClipRect(0, 0, realwidth, realheight, NZCLIP_PLANE);
 
 	// Sryder:	We need to draw the final screen texture again into the other buffer in the original position so that
