@@ -152,6 +152,8 @@ extern char logfilename[1024];
 #define HAVE_GL_FRAMEBUFFER
 #endif
 
+#define NATIVESCREENRES
+
 //#define DEVELOP // Disable this for release builds to remove excessive cheat commands and enable MD5 checking and stuff, all in one go. :3
 #ifdef DEVELOP
 #define VERSIONSTRING "Development EXE"
