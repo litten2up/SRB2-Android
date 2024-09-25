@@ -122,7 +122,7 @@ void OglSdlFinishUpdate(boolean waitvbl)
 
 	// Sryder:	We need to draw the final screen texture again into the other buffer in the original position so that
 	//			effects that want to take the old screen can do so after this
-	DrawFinalScreenTexture(realwidth, realheight);
+	//DrawFinalScreenTexture(realwidth, realheight); // seems to have been removed in srb2, want to fix when i work on opengl - bitten
 }
 
 EXPORT void HWRAPI(OglSdlSetPalette) (RGBA_t *palette)
