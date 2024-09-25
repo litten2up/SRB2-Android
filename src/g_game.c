@@ -4617,7 +4617,7 @@ void G_LoadGameData(gamedata_t *data)
 	if (!savebuffer.size)
 	{
 #ifdef USE_GAMEDATA_PATHS
-		if (FIL_ReadFile(va(pandf, srb2path, gamedatafilename), &savebuffer))
+		if (FIL_ReadFile(va(pandf, srb2path, gamedatafilename), &savebuffer.buf))
 			gamedatainpath = true;
 		else
 #endif
@@ -4925,7 +4925,7 @@ void G_SaveGameData(gamedata_t *data)
 
 #ifdef USE_GAMEDATA_PATHS
 	if (gamedatainpath)
-		FIL_WriteFile(va(pandf, srb2path, gamedatafilename), savebuffer.buf, gamebuffer.pos);
+		FIL_WriteFile(va(pandf, srb2path, gamedatafilename), savebuffer.buf, savebuffer.pos);
 	else
 #endif
 	FIL_WriteFile(va(pandf, srb2home, gamedatafilename), savebuffer.buf, savebuffer.pos);
@@ -4987,7 +4987,7 @@ void G_LoadGame(UINT32 slot, INT16 mapoverride)
 	if (marathonmode)
 		strcpy(savename, liveeventbackup);
 	else
-		sprintf(savename, savegamename, slot);
+		sprintf(savename, savename, slot);
 
 	savebuffer.size = FIL_ReadFile(savename, &savebuffer.buf);
 	if (!savebuffer.size)
