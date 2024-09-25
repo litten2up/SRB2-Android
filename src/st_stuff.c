@@ -2771,25 +2771,11 @@ static boolean drawstagetitle = false;
 //
 static void ST_overlayDrawer(void)
 {
-	#if 1 // todo: remove
-	// Decide whether to draw the stage title or not
-	boolean stagetitle = false;
-
 #ifdef TOUCHINPUTS
 	boolean drawtouchbuttons; // Draw touch screen buttons.
 	boolean drawtouchcontrols = touch_useinputs; // Movement controls, jump and spin, etc.
 	INT32 touchalphalevel;
 #endif
-
-	// Check for a valid level title
-	// If the HUD is enabled
-	// And, if Lua is running, if the HUD library has the stage title enabled
-	if (G_IsTitleCardAvailable() && *mapheaderinfo[gamemap-1]->lvlttl != '\0' && !(hu_showscores && (netgame || multiplayer)))
-	{
-		stagetitle = true;
-		ST_preDrawTitleCard();
-	}
-	#endif
 
 	// hu_showscores = auto hide score/time/rings when tab rankings are shown
 	if (!(hu_showscores && (netgame || multiplayer)))
