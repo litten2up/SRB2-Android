@@ -2748,6 +2748,7 @@ struct {
 	{"Joystick / D-Pad",     GC_JOYSTICK},
 	{"Jump",                 GC_JUMP},
 	{"Spin",                 GC_SPIN},
+	{"Shield",		 GC_SHIELD},
 	{"Look Up",              GC_LOOKUP},
 	{"Look Down",            GC_LOOKDOWN},
 	{"Center View",          GC_CENTERVIEW},
