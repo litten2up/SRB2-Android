@@ -2,9 +2,9 @@ name: Android, WARNING BUILT ON NEXT
 
 on:
   push:
-    branches: [ bitten-next ]
+    branches: [ 2214-pre2 ]
   pull_request:
-    branches: [ bitten-next ]
+    branches: [ 2214-pre2 ]
 
 jobs:
   build:
