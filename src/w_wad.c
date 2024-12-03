@@ -831,9 +831,9 @@ static INT32 W_MakeFileMD5(const char *filename, fhandletype_t handletype, void 
 		File_Close(fhandle);
 		return 0;
 	}
-#endif
 	return 1;
 }
+#endif
 
 // Invalidates the cache of lump numbers. Call this whenever a wad is added.
 static void W_InvalidateLumpnumCache(void)
