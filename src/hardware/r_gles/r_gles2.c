@@ -1911,6 +1911,26 @@ EXPORT void HWRAPI(ClearLightTables)(void)
 	tex_downloaded = 0;
 }
 
+EXPORT void HWRAPI(UpdateLightTable)(UINT32 id, RGBA_t *hw_lighttable)
+{
+#if 0 // bitten fix
+    LTListItem *item = LightTablesHead;
+    while (item && item->id != id)
+        item = item->next;
+
+    if (item)
+    {
+        pglBindTexture(GL_TEXTURE_2D, item->id);
+
+        // Just update it
+        pglTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 256, 32, GL_RGBA, GL_UNSIGNED_BYTE, hw_lighttable);
+
+        // restore previously bound texture
+        pglBindTexture(GL_TEXTURE_2D, tex_downloaded);
+    }
+#endif
+}
+
 // This palette is used for the palette rendering postprocessing step.
 EXPORT void HWRAPI(SetScreenPalette)(RGBA_t *palette)
 {
