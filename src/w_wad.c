@@ -69,6 +69,7 @@
 #include "i_video.h" // rendermode
 #include "md5.h"
 #include "lua_script.h"
+#include "lua_hook.h"
 #ifdef SCANTHINGS
 #include "p_setup.h" // P_ScanThings
 #endif
@@ -831,9 +832,9 @@ static INT32 W_MakeFileMD5(const char *filename, fhandletype_t handletype, void 
 		File_Close(fhandle);
 		return 0;
 	}
-#endif
 	return 1;
 }
+#endif
 
 // Invalidates the cache of lump numbers. Call this whenever a wad is added.
 static void W_InvalidateLumpnumCache(void)
@@ -1529,6 +1530,10 @@ UINT16 W_InitFile(const char *filename, fhandletype_t handletype, boolean mainfi
 		break;
 	}
 
+	lua_lumploading++;
+	LUA_HookVoid(HOOK(AddonLoaded));
+	lua_lumploading--;
+
 	W_InvalidateLumpnumCache();
 	return wadfile->numlumps;
 }
@@ -1689,6 +1694,11 @@ UINT16 W_InitFolder(const char *path, boolean mainfile, boolean startup)
 	W_ReadFileShaders(wadfile);
 	W_LoadTrnslateLumps(numwadfiles - 1);
 	W_LoadDehackedLumpsPK3(numwadfiles - 1, mainfile);
+
+	lua_lumploading++;
+	LUA_HookVoid(HOOK(AddonLoaded));
+	lua_lumploading--;
+
 	W_InvalidateLumpnumCache();
 
 	return wadfile->numlumps;
