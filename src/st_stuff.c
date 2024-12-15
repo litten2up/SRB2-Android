@@ -146,12 +146,7 @@ static patch_t *fireflower;
 hudinfo_t hudinfo[NUMHUDITEMS] =
 {
 	{  16, 176, V_SNAPTOLEFT |V_SNAPTOBOTTOM}, // HUD_LIVES
-	{ 250,   4, V_SNAPTORIGHT|V_SNAPTOTOP},    // HUD_LIVESALT
-#if 0
-	// BITTEN CHECK THIS SHIT OUT
-	{  16, 176, V_SNAPTOLEFT|V_SNAPTOBOTTOM}, // HUD_LIVES
-	{  16, 152, V_SNAPTOLEFT|V_SNAPTOBOTTOM}, // HUD_INPUT
-#endif
+	{  16, 152, V_SNAPTOLEFT|V_SNAPTOBOTTOM},  // HUD_INPUT
 
 	{  16,  42, V_SNAPTOLEFT|V_SNAPTOTOP}, // HUD_RINGS
 	{  96,  42, V_SNAPTOLEFT|V_SNAPTOTOP}, // HUD_RINGSNUM
@@ -177,6 +172,8 @@ hudinfo_t hudinfo[NUMHUDITEMS] =
 	{ 152, 168, 0}, // HUD_HUNTPICS
 
 	{ 288, 176, V_SNAPTORIGHT|V_SNAPTOBOTTOM}, // HUD_POWERUPS
+
+	{ 250,   4, V_SNAPTORIGHT|V_SNAPTOTOP},    // ANDROID_HUD_LIVESALT
 };
 
 static huddrawlist_h luahuddrawlist_game[2];
@@ -208,7 +205,7 @@ static boolean ST_UseAltLivesHUD(void)
 hudinfo_t *ST_GetLivesHUDInfo(void)
 {
 	if (ST_UseAltLivesHUD())
-		return &hudinfo[HUD_LIVESALT];
+		return &hudinfo[ANDROID_HUD_LIVESALT];
 	else
 		return &hudinfo[HUD_LIVES];
 }

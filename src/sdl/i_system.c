@@ -253,8 +253,8 @@ static void JoyReset(SDLJoyInfo_t *JoySet)
 	JoySet->axises = JoySet->buttons = JoySet->hats = JoySet->balls = 0;
 	//JoySet->scale
 }
-
 #endif
+
 /**	\brief First joystick up and running
 */
 static INT32 joystick_started  = 0;

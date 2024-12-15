@@ -16,6 +16,7 @@
 #include "ts_main.h"
 #include "ts_draw.h"
 #include "ts_custom.h"
+#include "apk_main.h"
 
 #include "g_game.h" // players[MAXPLAYERS], promptactive, promptblockcontrols
 
@@ -1149,7 +1150,7 @@ void TS_BuildPreset(touchconfig_t *controls, touchconfigstatus_t *status,
 		y = (16 * FRACUNIT);
 		if (status->splitscreen)
 			y /= 2;
-		topcorner = (ST_GetLivesHUDInfo()->y * FRACUNIT) + y + corneroffset;
+		topcorner = (APK_ST_GetLivesHUDInfo()->y * FRACUNIT) + y + corneroffset;
 	}
 	else
 		topcorner = corneroffset;
@@ -1419,10 +1420,10 @@ static void BuildWeaponButtons(touchconfigstatus_t *status)
 	INT32 i, wep;
 	fixed_t x, y, w, h;
 
-	x = (ST_WEAPONS_X * FRACUNIT) + (6 * FRACUNIT);
-	y = (ST_WEAPONS_Y * FRACUNIT) - (2 * FRACUNIT);
-	w = ST_WEAPONS_W * FRACUNIT;
-	h = ST_WEAPONS_H * FRACUNIT;
+	x = (APK_ST_WEAPONS_X * FRACUNIT) + (6 * FRACUNIT);
+	y = (APK_ST_WEAPONS_Y * FRACUNIT) - (2 * FRACUNIT);
+	w = APK_ST_WEAPONS_W * FRACUNIT;
+	h = APK_ST_WEAPONS_H * FRACUNIT;
 
 	wep = GC_WEPSLOT1;
 
@@ -1753,10 +1754,10 @@ void TS_DefineButtons(void)
 		status.promptactive = promptactive;
 		status.promptblockcontrols = promptblockcontrols;
 
-		if (F_GetPromptHideHud(ST_GetLivesHUDInfo()->y))
+		if (F_GetPromptHideHud(APK_ST_GetLivesHUDInfo()->y))
 			status.altliveshud = false;
 		else
-			status.altliveshud = ST_AltLivesHUDEnabled() && (!(status.nights || status.specialstage)) && (gamestate == GS_LEVEL);
+			status.altliveshud = APK_ST_AltLivesHUDEnabled() && (!(status.nights || status.specialstage)) && (gamestate == GS_LEVEL);
 
 		if (memcmp(&status, &touchcontrolstatus, size))
 		{

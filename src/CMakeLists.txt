@@ -16,6 +16,10 @@ add_executable(SRB2SDL2 MACOSX_BUNDLE WIN32
 	g_demo.c
 	g_game.c
 	g_input.c
+	apk_main.c
+	ts_main.c
+	ts_draw.c
+	ts_custom.c
 	am_map.c
 	command.c
 	console.c
@@ -102,8 +106,8 @@ add_executable(SRB2SDL2 MACOSX_BUNDLE WIN32
 	lua_blockmaplib.c
 	lua_hudlib.c
 	lua_hudlib_drawlist.c
-	lua_colorlib.c
 	lua_inputlib.c
+	lua_colorlib.c
 )
 
 # This updates the modification time for comptime.c at the

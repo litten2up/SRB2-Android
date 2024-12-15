@@ -48,9 +48,11 @@
 #include "p_local.h" // camera, camera2
 #include "p_tick.h"
 
+// Android
 #ifdef TOUCHINPUTS
 #include "ts_main.h"
 #endif
+#include "apk_main.h"
 
 #ifdef HWRENDER
 #include "hardware/hw_main.h"
@@ -1974,7 +1976,7 @@ void HU_Drawer(void)
 	{
 		INT32 strength = ((pausedelay - 1 - NEWTICRATE/2)*10)/(NEWTICRATE/3);
 		INT32 x = hudinfo[HUD_LIVES].x;
-		INT32 y = demoinputdrawn ? demoinputdrawn : hudinfo[HUD_LIVES].y + 10;
+		INT32 y = (android_helpers.demo_inputdrawn ? android_helpers.demo_inputdrawn : hudinfo[HUD_LIVES].y + 10);
 		INT32 f = hudinfo[HUD_LIVES].f;
 
 		V_DrawThinString(x-2, y,
