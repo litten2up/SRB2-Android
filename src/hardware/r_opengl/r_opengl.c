@@ -97,6 +97,7 @@ static GLint min_filter = GL_LINEAR;
 static GLint mag_filter = GL_LINEAR;
 static GLint anisotropic_filter = 0;
 static boolean model_lighting = false;
+boolean supportMipMap = false;
 
 const GLubyte *gl_version = NULL;
 const GLubyte *gl_renderer = NULL;
@@ -419,10 +420,13 @@ static PFNglCopyTexImage2D pglCopyTexImage2D;
 typedef void (APIENTRY * PFNglCopyTexSubImage2D) (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height);
 static PFNglCopyTexSubImage2D pglCopyTexSubImage2D;
 #endif
+<<<<<<< HEAD
 #endif
 /* GLU functions */
 typedef GLint (APIENTRY * PFNgluBuild2DMipmaps) (GLenum target, GLint internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *data);
 static PFNgluBuild2DMipmaps pgluBuild2DMipmaps;
+=======
+>>>>>>> 7b6bf976646e44f6fa4ed92700770b64dfcdcfbc
 
 <<<<<<< HEAD
 boolean GLBackend_LoadFunctions(void)
@@ -738,6 +742,7 @@ void SetupGLFunc4(void)
  //end of shit bitten probly should fix but isnt bothered enough to do right now
 #endif
 #endif
+<<<<<<< HEAD
 
 	// GLU
 	pgluBuild2DMipmaps = GLBackend_GetFunction("gluBuild2DMipmaps");
@@ -754,6 +759,8 @@ EXPORT void HWRAPI(SetShader) (int type)
 #else
 	(void)type;
 #endif
+=======
+>>>>>>> 7b6bf976646e44f6fa4ed92700770b64dfcdcfbc
 }
 
 EXPORT boolean HWRAPI(InitShaders) (void)
@@ -1459,7 +1466,8 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 		//pglTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
 		if (MipmapEnabled)
 		{
-			pgluBuild2DMipmaps(GL_TEXTURE_2D, GL_LUMINANCE_ALPHA, w, h, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
+			pglTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+			pglTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
 			pglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0);
 			if (pTexInfo->flags & TF_TRANSPARENT)
 				pglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 0); // No mippmaps on transparent stuff
@@ -1480,7 +1488,8 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 		//pglTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
 		if (MipmapEnabled)
 		{
-			pgluBuild2DMipmaps(GL_TEXTURE_2D, GL_ALPHA, w, h, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
+			pglTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+			pglTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
 			pglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0);
 			if (pTexInfo->flags & TF_TRANSPARENT)
 				pglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LOD, 0); // No mippmaps on transparent stuff
@@ -1500,7 +1509,8 @@ EXPORT void HWRAPI(UpdateTexture) (GLMipmap_t *pTexInfo)
 	{
 		if (MipmapEnabled)
 		{
-			pgluBuild2DMipmaps(GL_TEXTURE_2D, textureformatGL, w, h, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
+			pglTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+			pglTexImage2D(GL_TEXTURE_2D, 0, textureformatGL, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptex);
 			// Control the mipmap level of detail
 			pglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_LOD, 0); // the lower the number, the higer the detail
 			if (pTexInfo->flags & TF_TRANSPARENT)
@@ -2069,8 +2079,51 @@ EXPORT void HWRAPI(SetSpecialState) (hwdspecialstate_t IdState, INT32 Value)
 			break;
 
 		case HWD_SET_TEXTUREFILTERMODE:
+<<<<<<< HEAD
 			GLTexture_SetFilterMode(Value);
 			GLTexture_Flush(); //??? if we want to change filter mode by texture, remove this
+=======
+			switch (Value)
+			{
+				case HWD_SET_TEXTUREFILTER_TRILINEAR:
+					min_filter = GL_LINEAR_MIPMAP_LINEAR;
+					mag_filter = GL_LINEAR;
+					MipMap = GL_TRUE;
+					break;
+				case HWD_SET_TEXTUREFILTER_BILINEAR:
+					min_filter = mag_filter = GL_LINEAR;
+					MipMap = GL_FALSE;
+					break;
+				case HWD_SET_TEXTUREFILTER_POINTSAMPLED:
+					min_filter = mag_filter = GL_NEAREST;
+					MipMap = GL_FALSE;
+					break;
+				case HWD_SET_TEXTUREFILTER_MIXED1:
+					min_filter = GL_NEAREST;
+					mag_filter = GL_LINEAR;
+					MipMap = GL_FALSE;
+					break;
+				case HWD_SET_TEXTUREFILTER_MIXED2:
+					min_filter = GL_LINEAR;
+					mag_filter = GL_NEAREST;
+					MipMap = GL_FALSE;
+					break;
+				case HWD_SET_TEXTUREFILTER_MIXED3:
+					min_filter = GL_LINEAR_MIPMAP_LINEAR;
+					mag_filter = GL_NEAREST;
+					MipMap = GL_TRUE;
+					break;
+				default:
+					mag_filter = GL_LINEAR;
+					min_filter = GL_NEAREST;
+			}
+			if (!supportMipMap)
+			{
+				MipMap = GL_FALSE;
+				min_filter = GL_LINEAR;
+			}
+			Flush(); //??? if we want to change filter mode by texture, remove this
+>>>>>>> 7b6bf976646e44f6fa4ed92700770b64dfcdcfbc
 			break;
 
 		case HWD_SET_TEXTUREANISOTROPICMODE:

@@ -30,7 +30,6 @@
 
 #else
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 #ifdef STATIC_OPENGL // Because of the 1.3 functions, you'll need GLext to compile it if static
 #define GL_GLEXT_PROTOTYPES
@@ -75,4 +74,51 @@ extern PFNWGLEXTSWAPCONTROLPROC wglSwapIntervalEXT;
 extern PFNWGLEXTGETSWAPINTERVALPROC wglGetSwapIntervalEXT;
 #endif
 
+<<<<<<< HEAD
+=======
+#ifdef STATIC_OPENGL
+#define pglClear glClear
+#define pglGetIntegerv glGetIntegerv
+#define pglGetString glGetString
+#else
+/* 1.0 Miscellaneous functions */
+typedef void (APIENTRY * PFNglClear) (GLbitfield mask);
+extern PFNglClear pglClear;
+typedef void (APIENTRY * PFNglGetIntegerv) (GLenum pname, GLint *params);
+extern PFNglGetIntegerv pglGetIntegerv;
+typedef const GLubyte* (APIENTRY  * PFNglGetString) (GLenum name);
+extern PFNglGetString pglGetString;
+#if 0
+typedef void (APIENTRY * PFNglEnableClientState) (GLenum cap); // redefined in r_opengl.c
+static PFNglEnableClientState pglEnableClientState;
+#endif
+#endif
+
+// ==========================================================================
+//                                                                     GLOBAL
+// ==========================================================================
+
+extern const GLubyte	*gl_version;
+extern const GLubyte	*gl_renderer;
+extern const GLubyte	*gl_extensions;
+
+extern RGBA_t			myPaletteData[];
+extern GLint			screen_width;
+extern GLint			screen_height;
+extern GLbyte			screen_depth;
+extern GLint			maximumAnisotropy;
+extern boolean 			supportMipMap;
+
+/**	\brief OpenGL flags for video driver
+*/
+extern INT32            oglflags;
+extern GLint            textureformatGL;
+
+typedef enum
+{
+	GLF_NOZBUFREAD = 0x01,
+	GLF_NOTEXENV   = 0x02,
+} oglflags_t;
+
+>>>>>>> 7b6bf976646e44f6fa4ed92700770b64dfcdcfbc
 #endif

@@ -56,6 +56,7 @@ static boolean ServerName_CanChange (const char*);
 static void Update_parameters (void);
 
 static void MasterServer_OnChange(void);
+static void RoomId_OnChange(void);
 
 static CV_PossibleValue_t masterserver_update_rate_cons_t[] = {
 	{2,  "MIN"},
@@ -67,8 +68,9 @@ consvar_t cv_masterserver = CVAR_INIT ("masterserver", "https://ds.ms.srb2.org/M
 consvar_t cv_servername = CVAR_INIT_WITH_CALLBACKS ("servername", "SRB2 server", CV_SAVE|CV_NETVAR|CV_CALL|CV_NOINIT|CV_ALLOWLUA, NULL, Update_parameters, ServerName_CanChange);
 
 consvar_t cv_masterserver_update_rate = CVAR_INIT ("masterserver_update_rate", "15", CV_SAVE|CV_CALL|CV_NOINIT, masterserver_update_rate_cons_t, Update_parameters);
+consvar_t cv_masterserver_room_id = CVAR_INIT ("masterserver_room_id", "0", CV_CALL, CV_Unsigned, RoomId_OnChange);
 
-INT16 ms_RoomId = -1;
+INT16 ms_RoomId = 0;
 
 #if defined (MASTERSERVER) && defined (HAVE_THREADS)
 int           ms_QueryId;
@@ -93,6 +95,7 @@ void AddMServCommands(void)
 {
 	CV_RegisterVar(&cv_masterserver);
 	CV_RegisterVar(&cv_masterserver_update_rate);
+	CV_RegisterVar(&cv_masterserver_room_id);
 	CV_RegisterVar(&cv_masterserver_timeout);
 	CV_RegisterVar(&cv_masterserver_debug);
 	CV_RegisterVar(&cv_masterserver_token);
@@ -543,6 +546,17 @@ Update_parameters (void)
 			UpdateServer();
 	}
 #endif/*MASTERSERVER*/
+}
+
+static void RoomId_OnChange(void)
+{
+	if (ms_RoomId != cv_masterserver_room_id.value)
+	{
+		UnregisterServer();
+		ms_RoomId = cv_masterserver_room_id.value;
+		if (Online())
+			RegisterServer();
+	}
 }
 
 static void MasterServer_OnChange(void)

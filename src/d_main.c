@@ -2,7 +2,7 @@
 //-----------------------------------------------------------------------------
 // Copyright (C) 1993-1996 by id Software, Inc.
 // Copyright (C) 1998-2000 by DooM Legacy Team.
-// Copyright (C) 1999-2024 by Sonic Team Junior.
+// Copyright (C) 1999-2025 by Sonic Team Junior.
 //
 // This program is free software distributed under the
 // terms of the GNU General Public License, version 2.
@@ -1294,6 +1294,8 @@ static void IdentifyVersion(void)
 	// Add the players
 	D_AddFile(&startupwadfiles, FILEPATH("player.dta"), ASSET_HASH_PLAYER_DTA);
 
+	D_AddFile(&startupwadfiles, FILEPATH("characters.pk3"), ASSET_HASH_CHARACTERS_PK3);
+
 #ifdef USE_PATCH_DTA
 	// Add our crappy patches to fix our bugs
 	D_AddFile(&startupwadfiles, FILEPATH("patch.pk3"), ASSET_HASH_PATCH_PK3);
@@ -1316,7 +1318,7 @@ static void IdentifyVersion(void)
 				I_Error("File "str" has been modified with non-music/sound lumps"); \
 		}
 
-		MUSICTEST("music.dta")
+		MUSICTEST("music.pk3")
 		//MUSICTEST("patch_music.pk3")
 	}
 #endif
@@ -1369,7 +1371,7 @@ void D_SRB2Main(void)
 	// Print GPL notice for our console users (Linux)
 	CONS_Printf(
 	"\n\nSonic Robo Blast 2\n"
-	"Copyright (C) 1998-2024 by Sonic Team Junior\n\n"
+	"Copyright (C) 1998-2025 by Sonic Team Junior\n\n"
 	"This program comes with ABSOLUTELY NO WARRANTY.\n\n"
 	"This is free software, and you are welcome to redistribute it\n"
 	"and/or modify it under the terms of the GNU General Public License\n"
@@ -1503,7 +1505,7 @@ void D_SRB2Main(void)
 	// Make backups of some SOCcable tables.
 	P_BackupTables();
 
-	mainwads = 3; // doesn't include music.dta
+	mainwads = 3; // doesn't include music.pk3
 #ifdef USE_PATCH_DTA
 	mainwads++;
 #endif
@@ -1690,7 +1692,7 @@ void D_SRB2Main(void)
 	{
 		if (!M_IsNextParm())
 			I_Error("usage: -room <room_id>\nCheck the Master Server's webpage for room ID numbers.\n");
-		ms_RoomId = atoi(M_GetNextParm());
+		CV_SetValue(&cv_masterserver_room_id, atoi(M_GetNextParm()));
 
 #ifdef UPDATE_ALERT
 		GetMODVersion_Console();

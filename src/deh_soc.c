@@ -3585,7 +3585,7 @@ void readmaincfg(MYFILE *f)
 			if (fastcmp(word, "EXECCFG"))
 			{
 				if (strchr(word2, '.'))
-					COM_BufAddText(va("exec %s\n", word2));
+					COM_ExecFile(word2, COM_LUA, false);
 				else
 				{
 					lumpnum_t lumpnum;
@@ -3600,7 +3600,7 @@ void readmaincfg(MYFILE *f)
 					if (lumpnum == LUMPERROR || W_LumpLength(lumpnum) == 0)
 						CONS_Debug(DBG_SETUP, "SOC Error: script lump %s not found/not valid.\n", newname);
 					else
-						COM_BufInsertText(W_CacheLumpNum(lumpnum, PU_CACHE));
+						COM_BufInsertTextEx(W_CacheLumpNum(lumpnum, PU_CACHE), COM_LUA);
 				}
 			}
 
@@ -3927,6 +3927,7 @@ void readmaincfg(MYFILE *f)
 					value = get_number(word2);
 
 				bootmap = (INT16)value;
+				bootmapchanged = true;
 				//titlechanged = true;
 			}
 			else if (fastcmp(word, "STARTCHAR"))
