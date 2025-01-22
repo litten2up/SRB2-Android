@@ -74,8 +74,6 @@ extern PFNWGLEXTSWAPCONTROLPROC wglSwapIntervalEXT;
 extern PFNWGLEXTGETSWAPINTERVALPROC wglGetSwapIntervalEXT;
 #endif
 
-<<<<<<< HEAD
-=======
 #ifdef STATIC_OPENGL
 #define pglClear glClear
 #define pglGetIntegerv glGetIntegerv
@@ -120,5 +118,4 @@ typedef enum
 	GLF_NOTEXENV   = 0x02,
 } oglflags_t;
 
->>>>>>> 7b6bf976646e44f6fa4ed92700770b64dfcdcfbc
 #endif
