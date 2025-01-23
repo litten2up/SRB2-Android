@@ -13,6 +13,7 @@
 #include "../hw_shaders.h"
 #include "../r_glcommon/r_glcommon.h"
 #include "../../r_local.h" // For rendertimefrac, used for the leveltime shader uniform
+#include "../../z_zone.h" // Helps supress warnings
 
 boolean gl_shadersenabled = false;
 hwdshaderstage_t gl_allowshaders = 0;
