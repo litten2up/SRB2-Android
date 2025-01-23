@@ -32,6 +32,7 @@
 #include "m_misc.h" // moviemode
 #include "m_anigif.h" // cv_gif_downscale
 #include "p_setup.h" // NiGHTS grading
+#include "apk_main.h"
 
 //random index
 #include "m_random.h"
@@ -2309,8 +2310,8 @@ static void ST_drawWeaponRing(powertype_t weapon, INT32 rwflag, INT32 wepflag, I
 static void ST_drawMatchHUD(void)
 {
 	char penaltystr[7];
-	const INT32 y = ST_WEAPONS_Y;
-	INT32 offset = ST_WEAPONS_X;
+	const INT32 y = APK_ST_WEAPONS_Y;
+	INT32 offset = APK_ST_WEAPONS_X;
 
 	if (F_GetPromptHideHud(y))
 		return;
@@ -2335,12 +2336,12 @@ static void ST_drawMatchHUD(void)
 				ST_drawWeaponSelect(offset, y);
 		}
 
-		ST_drawWeaponRing(pw_automaticring, RW_AUTO, WEP_AUTO, offset + ST_WEAPONS_W, y, autoring);
-		ST_drawWeaponRing(pw_bouncering, RW_BOUNCE, WEP_BOUNCE, offset + (ST_WEAPONS_W * 2), y, bouncering);
-		ST_drawWeaponRing(pw_scatterring, RW_SCATTER, WEP_SCATTER, offset + (ST_WEAPONS_W * 3), y, scatterring);
-		ST_drawWeaponRing(pw_grenadering, RW_GRENADE, WEP_GRENADE, offset + (ST_WEAPONS_W * 4), y, grenadering);
-		ST_drawWeaponRing(pw_explosionring, RW_EXPLODE, WEP_EXPLODE, offset + (ST_WEAPONS_W * 5), y, explosionring);
-		ST_drawWeaponRing(pw_railring, RW_RAIL, WEP_RAIL, offset + (ST_WEAPONS_W * 6), y, railring);
+		ST_drawWeaponRing(pw_automaticring, RW_AUTO, WEP_AUTO, offset + APK_ST_WEAPONS_W, y, autoring);
+		ST_drawWeaponRing(pw_bouncering, RW_BOUNCE, WEP_BOUNCE, offset + (APK_ST_WEAPONS_W * 2), y, bouncering);
+		ST_drawWeaponRing(pw_scatterring, RW_SCATTER, WEP_SCATTER, offset + (APK_ST_WEAPONS_W * 3), y, scatterring);
+		ST_drawWeaponRing(pw_grenadering, RW_GRENADE, WEP_GRENADE, offset + (APK_ST_WEAPONS_W * 4), y, grenadering);
+		ST_drawWeaponRing(pw_explosionring, RW_EXPLODE, WEP_EXPLODE, offset + (APK_ST_WEAPONS_W * 5), y, explosionring);
+		ST_drawWeaponRing(pw_railring, RW_RAIL, WEP_RAIL, offset + (APK_ST_WEAPONS_W * 6), y, railring);
 
 		if (stplyr->ammoremovaltimer && leveltime % 8 < 4)
 		{
