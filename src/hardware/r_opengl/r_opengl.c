@@ -596,8 +596,10 @@ boolean GLBackend_LoadExtraFunctions(void)
 	if (GLExtension_shaders)
 		Shader_LoadFunctions();
 }
-// start of shit bitten is currently too lazy to fix
+
 #if 0
+// start of shit bitten is currently too lazy to fix
+
 typedef GLuint 	(R_GL_APIENTRY *PFNglCreateShader)		(GLenum);
 typedef void 	(R_GL_APIENTRY *PFNglShaderSource)		(GLuint, GLsizei, const GLchar**, GLint*);
 typedef void 	(R_GL_APIENTRY *PFNglCompileShader)		(GLuint);
