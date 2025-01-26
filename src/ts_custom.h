@@ -186,8 +186,8 @@ typedef enum
 #define TOUCHGRIDSIZE      16
 #define TOUCHSMALLGRIDSIZE (TOUCHGRIDSIZE / 2)
 
-#define BUTTONEXTENDH (4 * vid.dupx)
-#define BUTTONEXTENDV (4 * vid.dupy)
+#define BUTTONEXTENDH (4 * vid.dup)
+#define BUTTONEXTENDV (4 * vid.dup)
 
 typedef struct
 {

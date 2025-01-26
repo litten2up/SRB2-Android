@@ -584,7 +584,7 @@ boolean TS_LoadSingleLayout(INT32 ilayout)
 				break;
 		}
 
-		if (igc == GC_NULL || (igc >= GC_WEPSLOT1 && igc <= GC_WEPSLOT10) || igc == NUM_GAMECONTROLS)
+		if (igc == GC_NULL || (igc >= GC_WEPSLOT1 && igc <= GC_WEPSLOT7) || igc == NUM_GAMECONTROLS)
 			continue;
 
 		button = &(layout->config[igc]);
@@ -654,7 +654,7 @@ boolean TS_SaveSingleLayout(INT32 ilayout)
 	{
 		touchconfig_t *button = &(layout->config[gc]);
 
-		if (button->hidden || (gc >= GC_WEPSLOT1 && gc <= GC_WEPSLOT10))
+		if (button->hidden || (gc >= GC_WEPSLOT1 && gc <= GC_WEPSLOT7))
 			continue;
 
 		line = va(BUTTONSAVEFORMAT,
@@ -1440,8 +1440,8 @@ static void GetButtonResizePoint(touchconfig_t *btn, vector2_t *point, INT32 *x,
 {
 	INT32 tx, ty, tw, th;
 
-	INT32 psizew = 12 * vid.dupx;
-	INT32 psizeh = 12 * vid.dupy;
+	INT32 psizew = 12 * vid.dup;
+	INT32 psizeh = 12 * vid.dup;
 
 	GetButtonRect(btn, &tx, &ty, &tw, &th, false);
 
@@ -1465,11 +1465,11 @@ static boolean GetButtonOption(touchconfig_t *btn, touchcust_buttonstatus_t *btn
 {
 	INT32 tx, ty, tw, th;
 
-	INT32 offs = (4 * vid.dupx);
-	INT32 yoff = (8 * vid.dupx);
-	INT32 remw = (16 * vid.dupx);
-	INT32 snpw = (16 * vid.dupx);
-	INT32 btnh = (12 * vid.dupy);
+	INT32 offs = (4 * vid.dup);
+	INT32 yoff = (8 * vid.dup);
+	INT32 remw = (16 * vid.dup);
+	INT32 snpw = (16 * vid.dup);
+	INT32 btnh = (12 * vid.dup);
 
 	INT32 left, top;
 
@@ -1595,8 +1595,8 @@ static void MoveButtonTo(touchconfig_t *btn, INT32 x, INT32 y)
 //
 static void OffsetButtonBy(touchconfig_t *btn, float offsx, float offsy)
 {
-	float w = (BASEVIDWIDTH * vid.dupx);
-	float h = (BASEVIDHEIGHT * vid.dupy);
+	float w = (BASEVIDWIDTH * vid.dup);
+	float h = (BASEVIDHEIGHT * vid.dup);
 
 	SetButtonSupposedLocation(btn);
 
@@ -1702,10 +1702,10 @@ static void SetButtonSupposedLocation(touchconfig_t *btn)
 
 		TS_DenormalizeCoords(&x, &y);
 
-		btn->supposed.x = FixedToFloat(FixedMul(x, vid.dupx * FRACUNIT));
-		btn->supposed.y = FixedToFloat(FixedMul(y, vid.dupy * FRACUNIT));
-		btn->supposed.w = FixedToFloat(FixedMul(btn->w, vid.dupx * FRACUNIT));
-		btn->supposed.h = FixedToFloat(FixedMul(btn->h, vid.dupy * FRACUNIT));
+		btn->supposed.x = FixedToFloat(FixedMul(x, vid.dup * FRACUNIT));
+		btn->supposed.y = FixedToFloat(FixedMul(y, vid.dup * FRACUNIT));
+		btn->supposed.w = FixedToFloat(FixedMul(btn->w, vid.dup * FRACUNIT));
+		btn->supposed.h = FixedToFloat(FixedMul(btn->h, vid.dup * FRACUNIT));
 
 		CalcButtonFixedSupposedPos(btn);
 		CalcButtonFixedSupposedSize(btn);
@@ -1721,10 +1721,10 @@ static void MoveButtonToSupposedLocation(touchconfig_t *btn)
 {
 	if (btn->modifying)
 	{
-		btn->x = FixedDiv(btn->supposed.fx, vid.dupx * FRACUNIT);
-		btn->y = FixedDiv(btn->supposed.fy, vid.dupy * FRACUNIT);
-		btn->w = FixedDiv(btn->supposed.fw, vid.dupx * FRACUNIT);
-		btn->h = FixedDiv(btn->supposed.fh, vid.dupy * FRACUNIT);
+		btn->x = FixedDiv(btn->supposed.fx, vid.dup * FRACUNIT);
+		btn->y = FixedDiv(btn->supposed.fy, vid.dup * FRACUNIT);
+		btn->w = FixedDiv(btn->supposed.fw, vid.dup * FRACUNIT);
+		btn->h = FixedDiv(btn->supposed.fh, vid.dup * FRACUNIT);
 		btn->modifying = false;
 		btn->supposed.snap = false;
 		TS_NormalizeButton(btn);
@@ -1745,8 +1745,8 @@ static void UpdateJoystickBase(touchconfig_t *btn)
 	// Must not be normalized!
 	if (btn->modifying)
 	{
-		touch_joystick_x = btn->supposed.fx / vid.dupx;
-		touch_joystick_y = btn->supposed.fy / vid.dupy;
+		touch_joystick_x = btn->supposed.fx / vid.dup;
+		touch_joystick_y = btn->supposed.fy / vid.dup;
 
 #ifdef TSC_SNAPMOVE
 		if (btn->supposed.snap)
@@ -1767,8 +1767,8 @@ static void UpdateJoystickBase(touchconfig_t *btn)
 
 	if (btn->modifying)
 	{
-		btnw = btn->supposed.fw / vid.dupx;
-		btnh = btn->supposed.fh / vid.dupy;
+		btnw = btn->supposed.fw / vid.dup;
+		btnh = btn->supposed.fh / vid.dup;
 
 #ifdef TSC_SNAPMOVE
 		if (btn->supposed.snap)
@@ -1798,8 +1798,8 @@ static void UpdateJoystickSize(touchconfig_t *btn)
 {
 	if (btn->modifying)
 	{
-		touch_joystick_w = btn->supposed.fw / vid.dupx;
-		touch_joystick_h = btn->supposed.fh / vid.dupy;
+		touch_joystick_w = btn->supposed.fw / vid.dup;
+		touch_joystick_h = btn->supposed.fh / vid.dup;
 
 #ifdef TSC_SNAPMOVE
 		if (btn->supposed.snap)
@@ -1969,12 +1969,11 @@ boolean TS_IsCustomizationSubmenuOpen(void)
 static void FocusSubmenuOnSelection(INT32 selection)
 {
 	touchcust_submenu_selection = selection;
-	touchcust_submenu_scroll = (touchcust_submenu_selection * vid.dupy * TOUCHCUST_SUBMENU_DISPLAYITEMS);
+	touchcust_submenu_scroll = (touchcust_submenu_selection * vid.dup * TOUCHCUST_SUBMENU_DISPLAYITEMS);
 }
 
 static boolean HandleSubmenuButtons(INT32 fx, INT32 fy, touchfinger_t *finger, event_t *event)
 {
-	INT32 dup = (vid.dupx < vid.dupy ? vid.dupx : vid.dupy);
 	INT32 bx, by, bw, bh;
 	INT32 i;
 
@@ -1991,13 +1990,13 @@ static boolean HandleSubmenuButtons(INT32 fx, INT32 fy, touchfinger_t *finger, e
 			{
 				touchcust_submenu_button_t *btn = &touchcust_submenu_buttons[i];
 
-				bx = btn->x * vid.dupx;
-				by = btn->y * vid.dupy;
-				bw = btn->w * vid.dupx;
-				bh = btn->h * vid.dupy;
+				bx = btn->x * vid.dup;
+				by = btn->y * vid.dup;
+				bw = btn->w * vid.dup;
+				bh = btn->h * vid.dup;
 
-				bx += (vid.width - (BASEVIDWIDTH * dup)) / 2;
-				by += (vid.height - (BASEVIDHEIGHT * dup)) / 2;
+				bx += (vid.width - (BASEVIDWIDTH * vid.dup)) / 2;
+				by += (vid.height - (BASEVIDHEIGHT * vid.dup)) / 2;
 
 				if (FingerTouchesRect(fx, fy, bx, by, bw, bh))
 				{
@@ -2014,13 +2013,13 @@ static boolean HandleSubmenuButtons(INT32 fx, INT32 fy, touchfinger_t *finger, e
 			{
 				touchcust_submenu_button_t *btn = &touchcust_submenu_buttons[finger->selection-1];
 
-				bx = btn->x * vid.dupx;
-				by = btn->y * vid.dupy;
-				bw = btn->w * vid.dupx;
-				bh = btn->h * vid.dupy;
+				bx = btn->x * vid.dup;
+				by = btn->y * vid.dup;
+				bw = btn->w * vid.dup;
+				bh = btn->h * vid.dup;
 
-				bx += (vid.width - (BASEVIDWIDTH * dup)) / 2;
-				by += (vid.height - (BASEVIDHEIGHT * dup)) / 2;
+				bx += (vid.width - (BASEVIDWIDTH * vid.dup)) / 2;
+				by += (vid.height - (BASEVIDHEIGHT * vid.dup)) / 2;
 
 				btn->isdown = NULL;
 
@@ -2092,7 +2091,7 @@ static void GetSubmenuListItems(size_t *t, size_t *i, size_t *b, size_t *height,
 	if (scrolled)
 	{
 		sel = touchcust_submenu_scroll;
-		sel /= (TOUCHCUST_SUBMENU_DISPLAYITEMS * vid.dupy);
+		sel /= (TOUCHCUST_SUBMENU_DISPLAYITEMS * vid.dup);
 		sel = max(0, min(sel, touchcust_submenu_listsize));
 	}
 
@@ -2223,18 +2222,17 @@ static void Submenu_GenericList_OnFingerEvent(INT32 fx, INT32 fy, touchfinger_t 
 	size_t i, m = touchcust_submenu_height;
 	size_t t, b;
 
-	INT32 dup = (vid.dupx < vid.dupy ? vid.dupx : vid.dupy);
 
 	GetSubmenuListItems(&t, &i, &b, &m, true);
 	GetSubmenuScrollbar(mx, my, &sx, &sy, &sw, &sh, !IsMovingSubmenuScrollbar());
 
-	sx *= vid.dupx;
-	sy *= vid.dupy;
-	sw *= vid.dupx;
-	sh *= vid.dupy;
+	sx *= vid.dup;
+	sy *= vid.dup;
+	sw *= vid.dup;
+	sh *= vid.dup;
 
-	sx += (vid.width - (BASEVIDWIDTH * dup)) / 2;
-	sy += (vid.height - (BASEVIDHEIGHT * dup)) / 2;
+	sx += (vid.width - (BASEVIDWIDTH * vid.dup)) / 2;
+	sy += (vid.height - (BASEVIDHEIGHT * vid.dup)) / 2;
 
 	if (HandleSubmenuButtons(fx, fy, finger, event))
 		return;
@@ -2261,13 +2259,13 @@ static void Submenu_GenericList_OnFingerEvent(INT32 fx, INT32 fy, touchfinger_t 
 				if (my > BASEVIDHEIGHT)
 					break;
 
-				left *= vid.dupx;
-				top *= vid.dupy;
-				mw *= vid.dupx;
-				mh *= vid.dupy;
+				left *= vid.dup;
+				top *= vid.dup;
+				mw *= vid.dup;
+				mh *= vid.dup;
 
-				left += (vid.width - (BASEVIDWIDTH * dup)) / 2;
-				top += (vid.height - (BASEVIDHEIGHT * dup)) / 2;
+				left += (vid.width - (BASEVIDWIDTH * vid.dup)) / 2;
+				top += (vid.height - (BASEVIDHEIGHT * vid.dup)) / 2;
 
 				if (FingerTouchesRect(fx, fy, left, top, mw, mh))
 				{
@@ -2493,8 +2491,8 @@ static boolean HandleResizePointSelection(INT32 x, INT32 y, touchfinger_t *finge
 #define SUPPOSEDWIDTHCHECKLEFT  (UseGridLimits() && (btn->supposed.x + dx < 0.0f))
 #define SUPPOSEDHEIGHTCHECKTOP  (UseGridLimits() && (btn->supposed.y + dy < 0.0f))
 
-#define SUPPOSEDWIDTHCHECKRIGHT (UseGridLimits() && (btn->supposed.x + btn->supposed.w + dx > (BASEVIDWIDTH * vid.dupx)))
-#define SUPPOSEDHEIGHTCHECKBOT  (UseGridLimits() && (btn->supposed.y + btn->supposed.h + dy > (BASEVIDHEIGHT * vid.dupy)))
+#define SUPPOSEDWIDTHCHECKRIGHT (UseGridLimits() && (btn->supposed.x + btn->supposed.w + dx > (BASEVIDWIDTH * vid.dup)))
+#define SUPPOSEDHEIGHTCHECKBOT  (UseGridLimits() && (btn->supposed.y + btn->supposed.h + dy > (BASEVIDHEIGHT * vid.dup)))
 
 		switch (corner)
 		{
@@ -3173,7 +3171,7 @@ static void DrawButtonOption(touchcust_option_e opt, touchconfig_t *btn, touchcu
 	strwidth = V_StringWidth(str, V_NOSCALESTART|V_ALLOWLOWERCASE);
 	strheight = 8;
 	sx = (px + (pw / 2)) - (strwidth / 2);
-	sy = (py + (ph / 2)) - ((strheight * vid.dupy) / 2);
+	sy = (py + (ph / 2)) - ((strheight * vid.dup) / 2);
 	V_DrawString(sx, sy, V_NOSCALESTART|V_ALLOWLOWERCASE, str);
 }
 
@@ -3223,11 +3221,11 @@ void TS_DrawCustomization(void)
 		blinkcol = (blink ? red : yellow);
 		col = (btnstatus->moving ? green : blinkcol);
 
-		V_DrawFill(tx, ty, tw, vid.dupy, col|V_NOSCALESTART);
-		V_DrawFill(tx, ty + th, (tw + vid.dupx), vid.dupy, col|V_NOSCALESTART);
+		V_DrawFill(tx, ty, tw, vid.dup, col|V_NOSCALESTART);
+		V_DrawFill(tx, ty + th, (tw + vid.dup), vid.dup, col|V_NOSCALESTART);
 
-		V_DrawFill(tx, ty, vid.dupx, th, col|V_NOSCALESTART);
-		V_DrawFill(tx + tw, ty, vid.dupx, th, col|V_NOSCALESTART);
+		V_DrawFill(tx, ty, vid.dup, th, col|V_NOSCALESTART);
+		V_DrawFill(tx + tw, ty, vid.dup, th, col|V_NOSCALESTART);
 
 		// Draw options and resize points
 		if (!btnstatus->moving)
@@ -3243,11 +3241,11 @@ void TS_DrawCustomization(void)
 				vector2_t *point = &touchcust_resizepoints[j];
 				GetButtonResizePoint(btn, point, &px, &py, &pw, &ph);
 
-				V_DrawFadeFill(px + vid.dupx, py + vid.dupy, pw - vid.dupx, ph - vid.dupy, V_NOSCALESTART, orange, alpha);
-				V_DrawFadeFill(px, py, pw, vid.dupy, V_NOSCALESTART, (orange + 3), alpha);
-				V_DrawFadeFill(px, py + ph, (pw + vid.dupx), vid.dupy, V_NOSCALESTART, (orange + 3), alpha);
-				V_DrawFadeFill(px, py, vid.dupx, ph, V_NOSCALESTART, (orange + 3), alpha);
-				V_DrawFadeFill(px + pw, py, vid.dupx, ph, V_NOSCALESTART, (orange + 3), alpha);
+				V_DrawFadeFill(px + vid.dup, py + vid.dup, pw - vid.dup, ph - vid.dup, V_NOSCALESTART, orange, alpha);
+				V_DrawFadeFill(px, py, pw, vid.dup, V_NOSCALESTART, (orange + 3), alpha);
+				V_DrawFadeFill(px, py + ph, (pw + vid.dup), vid.dup, V_NOSCALESTART, (orange + 3), alpha);
+				V_DrawFadeFill(px, py, vid.dup, ph, V_NOSCALESTART, (orange + 3), alpha);
+				V_DrawFadeFill(px + pw, py, vid.dup, ph, V_NOSCALESTART, (orange + 3), alpha);
 			}
 		}
 	}

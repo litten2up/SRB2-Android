@@ -240,12 +240,12 @@ void TS_ScaleCoords(INT32 *x, INT32 *y, INT32 *w, INT32 *h, boolean normalized, 
 
 	if (screenscale)
 	{
-		xs *= vid.dupx;
-		ys *= vid.dupy;
+		xs *= vid.dup;
+		ys *= vid.dup;
 		if (w)
-			*w = FixedMul((*w), vid.dupx * FRACUNIT) / FRACUNIT;
+			*w = FixedMul((*w), vid.dup * FRACUNIT) / FRACUNIT;
 		if (h)
-			*h = FixedMul((*h), vid.dupy * FRACUNIT) / FRACUNIT;
+			*h = FixedMul((*h), vid.dup * FRACUNIT) / FRACUNIT;
 	}
 	else
 	{
@@ -482,7 +482,7 @@ void TS_HandleFingerEvent(event_t *ev)
 
 				if (gamestate == GS_INTERMISSION || gamestate == GS_CUTSCENE)
 					gc = GC_SPIN;
-				else if (promptblockcontrols && F_GetPromptHideHud(y / vid.dupy))
+				else if (promptblockcontrols && F_GetPromptHideHud(y / vid.dup))
 					gc = GC_JUMP;
 
 				if (gc != GC_NULL)
@@ -517,17 +517,17 @@ void TS_HandleFingerEvent(event_t *ev)
 						INT32 padx = touch_joystick_x, pady = touch_joystick_y;
 						INT32 padw = touch_joystick_w, padh = touch_joystick_h;
 
-						padx *= vid.dupx;
-						pady *= vid.dupy;
-						padw *= vid.dupx;
-						padh *= vid.dupy;
+						padx *= vid.dup;
+						pady *= vid.dup;
+						padw *= vid.dup;
+						padh *= vid.dup;
 						TS_CenterCoords(&padx, &pady);
 
 						fx = FixedToFloat((x * FRACUNIT) - (padx + (padw / 2)));
 						fy = FixedToFloat((y * FRACUNIT) - (pady + (padh / 2)));
 
-						touchxmove = (fx * xsens) / (FixedToFloat(touch_joystick_w) * (float)vid.dupx);
-						touchymove = (fy * ysens) / (FixedToFloat(touch_joystick_h) * (float)vid.dupy);
+						touchxmove = (fx * xsens) / (FixedToFloat(touch_joystick_w) * (float)vid.dup);
+						touchymove = (fy * ysens) / (FixedToFloat(touch_joystick_h) * (float)vid.dup);
 						touchpressure = finger->pressure;
 					}
 					// Mouse
@@ -946,11 +946,10 @@ void TS_CenterCoords(fixed_t *x, fixed_t *y)
 {
 	if (!LayoutIsWidescreen())
 	{
-		INT32 dup = (vid.dupx < vid.dupy ? vid.dupx : vid.dupy);
-		if (vid.width != BASEVIDWIDTH * dup)
-			*x += ((vid.width - (BASEVIDWIDTH * dup)) / 2) * FRACUNIT;
-		if (vid.height != BASEVIDHEIGHT * dup)
-			*y += ((vid.height - (BASEVIDHEIGHT * dup)) / 2) * FRACUNIT;
+		if (vid.width != BASEVIDWIDTH * vid.dup)
+			*x += ((vid.width - (BASEVIDWIDTH * vid.dup)) / 2) * FRACUNIT;
+		if (vid.height != BASEVIDHEIGHT * vid.dup)
+			*y += ((vid.height - (BASEVIDHEIGHT * vid.dup)) / 2) * FRACUNIT;
 	}
 }
 
@@ -958,11 +957,10 @@ void TS_CenterIntegerCoords(INT32 *x, INT32 *y)
 {
 	if (!LayoutIsWidescreen())
 	{
-		INT32 dup = (vid.dupx < vid.dupy ? vid.dupx : vid.dupy);
-		if (vid.width != BASEVIDWIDTH * dup)
-			*x += (vid.width - (BASEVIDWIDTH * dup)) / 2;
-		if (vid.height != BASEVIDHEIGHT * dup)
-			*y += (vid.height - (BASEVIDHEIGHT * dup)) / 2;
+		if (vid.width != BASEVIDWIDTH * vid.dup)
+			*x += (vid.width - (BASEVIDWIDTH * vid.dup)) / 2;
+		if (vid.height != BASEVIDHEIGHT * vid.dup)
+			*y += (vid.height - (BASEVIDHEIGHT * vid.dup)) / 2;
 	}
 }
 
@@ -980,6 +978,7 @@ static touchbuttonname_t touchbuttonnames[] = {
 	{GC_FIRENORMAL, "F.NORMAL", "FRN"},
 	{GC_TOSSFLAG, "TOSSFLAG", "FLG"},
 	{GC_SPIN, "SPIN", "SPN"},
+    {GC_SHIELD, "SHIELD", "SHLD"},
 	{GC_CAMTOGGLE, "CHASECAM", "CHASE"},
 	{GC_CAMRESET, "RESET CAM", "R.CAM"},
 	{GC_LOOKUP, "LOOK UP", "L.UP"},
@@ -1131,13 +1130,13 @@ void TS_BuildPreset(touchconfig_t *controls, touchconfigstatus_t *status,
 	{
 		y = F_GetPromptHideHudBound();
 		if (y < 0)
-			promptoffs = -(y / vid.dupy);
+			promptoffs = -(y / vid.dup);
 	}
 
 	if (widescreen)
 	{
-		rightcorner = (((vid.width / vid.dupx) - status->corners) * FRACUNIT);
-		bottomcorner = (((vid.height / vid.dupy) - promptoffs) * FRACUNIT);
+		rightcorner = (((vid.width / vid.dup) - status->corners) * FRACUNIT);
+		bottomcorner = (((vid.height / vid.dup) - promptoffs) * FRACUNIT);
 	}
 	else
 	{
@@ -1156,8 +1155,8 @@ void TS_BuildPreset(touchconfig_t *controls, touchconfigstatus_t *status,
 		topcorner = corneroffset;
 
 	// For the D-Pad
-	if (widescreen && (vid.height != BASEVIDHEIGHT * vid.dupy))
-		bottomalign = ((vid.height - (BASEVIDHEIGHT * vid.dupy)) / vid.dupy) * FRACUNIT;
+	if (widescreen && (vid.height != BASEVIDHEIGHT * vid.dup))
+		bottomalign = ((vid.height - (BASEVIDHEIGHT * vid.dup)) / vid.dup) * FRACUNIT;
 
 	TS_GetJoystick(&dx, &dy, &dw, &dh, tiny);
 	dx += (status->corners * FRACUNIT);
@@ -1399,7 +1398,7 @@ void TS_BuildPreset(touchconfig_t *controls, touchconfigstatus_t *status,
 
 static void BuildWeaponButtons(touchconfigstatus_t *status)
 {
-	INT32 i, wep, dup = (vid.dupx < vid.dupy ? vid.dupx : vid.dupy);
+	INT32 i, wep;
 	fixed_t x, y, w, h;
 
 	x = (ST_WEAPONS_X * FRACUNIT) + (6 * FRACUNIT);
@@ -1414,20 +1413,20 @@ static void BuildWeaponButtons(touchconfigstatus_t *status)
 		fixed_t wepx = x + (w * i);
 		fixed_t wepy = y;
 
-		wepx = FixedMul(wepx, dup * FRACUNIT);
-		wepy = FixedMul(wepy, dup * FRACUNIT);
+		wepx = FixedMul(wepx, vid.dup * FRACUNIT);
+		wepy = FixedMul(wepy, vid.dup * FRACUNIT);
 
-		if (vid.height != BASEVIDHEIGHT * dup)
-			wepy += (vid.height - (BASEVIDHEIGHT * dup)) * FRACUNIT;
-		if (vid.width != BASEVIDWIDTH * dup)
-			wepx += (vid.width - (BASEVIDWIDTH * dup)) * (FRACUNIT / 2);
+		if (vid.height != BASEVIDHEIGHT * vid.dup)
+			wepy += (vid.height - (BASEVIDHEIGHT * vid.dup)) * FRACUNIT;
+		if (vid.width != BASEVIDWIDTH * vid.dup)
+			wepx += (vid.width - (BASEVIDWIDTH * vid.dup)) * (FRACUNIT / 2);
 
 		if (status->ringslinger)
 		{
 			touchcontrols[wep].x = wepx;
 			touchcontrols[wep].y = wepy;
-			touchcontrols[wep].w = FixedMul(w, dup * FRACUNIT);
-			touchcontrols[wep].h = FixedMul(h, dup * FRACUNIT);
+			touchcontrols[wep].w = FixedMul(w, vid.dup * FRACUNIT);
+			touchcontrols[wep].h = FixedMul(h, vid.dup * FRACUNIT);
 			touchcontrols[wep].dontscale = true;
 		}
 
@@ -1527,25 +1526,24 @@ void TS_PositionNavigation(void)
 	fixed_t hcorner = 4 * FRACUNIT, vcorner = hcorner;
 	fixed_t basebtnsize = 24 * FRACUNIT;
 	fixed_t btnsize = basebtnsize;
-	INT32 dupz = (vid.dupx < vid.dupy ? vid.dupx : vid.dupy);
 
 	touchnavbutton_t *back = &nav[TOUCHNAV_BACK];
 	touchnavbutton_t *confirm = &nav[TOUCHNAV_CONFIRM];
 	touchnavbutton_t *con = &nav[TOUCHNAV_CONSOLE];
 	touchnavbutton_t *del = &nav[TOUCHNAV_DELETE];
 
-	if (vid.width != BASEVIDWIDTH * vid.dupx)
+	if (vid.width != BASEVIDWIDTH * vid.dup)
 	{
-		INT32 left = (vid.width - (BASEVIDWIDTH * dupz)) / 2;
-		INT32 top = (vid.height - (BASEVIDHEIGHT * dupz)) / 2;
+		INT32 left = (vid.width - (BASEVIDWIDTH * vid.dup)) / 2;
+		INT32 top = (vid.height - (BASEVIDHEIGHT * vid.dup)) / 2;
 		fixed_t size;
 
 		if (top > left)
-			size = (top * FRACUNIT) - ((vcorner + basebtnsize) * dupz);
+			size = (top * FRACUNIT) - ((vcorner + basebtnsize) * vid.dup);
 		else
-			size = (left * FRACUNIT) - ((hcorner * 2 + basebtnsize) * dupz);
+			size = (left * FRACUNIT) - ((hcorner * 2 + basebtnsize) * vid.dup);
 
-		size /= dupz;
+		size /= vid.dup;
 
 		if (size > 0)
 			btnsize += size;
@@ -1581,16 +1579,16 @@ void TS_PositionNavigation(void)
 		back->w = back->h = btnsize;
 
 		if (status->returncorner & TSNAV_CORNER_RIGHT)
-			back->x = (((vid.width / vid.dupx) * FRACUNIT) - confirm->w) - hcorner;
+			back->x = (((vid.width / vid.dup) * FRACUNIT) - confirm->w) - hcorner;
 		else
 			back->x = hcorner;
 
-		if (vid.height != BASEVIDHEIGHT * dupz)
-			test = (BASEVIDHEIGHT * dupz) * FRACUNIT;
+		if (vid.height != BASEVIDHEIGHT * vid.dup)
+			test = (BASEVIDHEIGHT * vid.dup) * FRACUNIT;
 
 		if ((status->returncorner & TSNAV_CORNER_BOTTOM)
 		|| (y > test && status->returncorner & TSNAV_CORNER_TOP_TEST))
-			back->y = (((vid.height / vid.dupy) * FRACUNIT) - back->h) - vcorner;
+			back->y = (((vid.height / vid.dup) * FRACUNIT) - back->h) - vcorner;
 		else
 			back->y = y;
 	}
@@ -1609,7 +1607,7 @@ void TS_PositionNavigation(void)
 		confirm->name = "+";
 		confirm->w = 32 * FRACUNIT;
 		confirm->h = 16 * FRACUNIT;
-		confirm->x = (((vid.width / (vid.dupx * 2)) * FRACUNIT) - (confirm->w / 2));
+		confirm->x = (((vid.width / (vid.dup * 2)) * FRACUNIT) - (confirm->w / 2));
 		confirm->color = 112;
 		confirm->pressedcolor = confirm->color + 3;
 		confirm->dontscaletext = true;
@@ -1619,7 +1617,7 @@ void TS_PositionNavigation(void)
 		confirm->patch = "NAV_CONFIRM";
 		confirm->shadow = true;
 		confirm->w = confirm->h = btnsize;
-		confirm->x = (((vid.width / vid.dupx) * FRACUNIT) - confirm->w) - hcorner;
+		confirm->x = (((vid.width / vid.dup) * FRACUNIT) - confirm->w) - hcorner;
 		confirm->y = vcorner;
 	}
 
@@ -1643,11 +1641,11 @@ void TS_PositionNavigation(void)
 		{
 			fixed_t test = 0;
 
-			if (vid.height != BASEVIDHEIGHT * dupz)
-				test = (BASEVIDHEIGHT * dupz) * FRACUNIT;
+			if (vid.height != BASEVIDHEIGHT * vid.dup)
+				test = (BASEVIDHEIGHT * vid.dup) * FRACUNIT;
 
 			if (test > 0 && con->h < test)
-				con->y = (((vid.height / vid.dupy) * FRACUNIT) - con->h) - (vcorner * 4);
+				con->y = (((vid.height / vid.dup) * FRACUNIT) - con->h) - (vcorner * 4);
 			else
 				con->y = y;
 		}
@@ -1685,7 +1683,7 @@ void TS_PositionNavigation(void)
 		}
 
 		del->x = hcorner;
-		del->y = (((vid.height / vid.dupy) * FRACUNIT) - del->h) - vcorner;
+		del->y = (((vid.height / vid.dup) * FRACUNIT) - del->h) - vcorner;
 
 		del->color = 35;
 		del->pressedcolor = del->color + 3;
@@ -1714,8 +1712,8 @@ void TS_DefineButtons(void)
 	{
 		status.vid.width = vid.width;
 		status.vid.height = vid.height;
-		status.vid.dupx = vid.dupx;
-		status.vid.dupy = vid.dupy;
+		status.vid.dupx = vid.dup;
+		status.vid.dupy = vid.dup;
 		status.presetscale = touch_preset_scale;
 		status.scalemeta = touch_scale_meta;
 		status.corners = touch_corners;
@@ -1756,8 +1754,8 @@ void TS_DefineButtons(void)
 	{
 		status.vid.width = vid.width;
 		status.vid.height = vid.height;
-		status.vid.dupx = vid.dupx;
-		status.vid.dupy = vid.dupy;
+		status.vid.dupx = vid.dup;
+		status.vid.dupy = vid.dup;
 		status.preset = touch_preset;
 		status.promptblockcontrols = promptblockcontrols;
 
@@ -1781,8 +1779,8 @@ void TS_DefineNavigationButtons(void)
 
 	navstatus.vid.width = vid.width;
 	navstatus.vid.height = vid.height;
-	navstatus.vid.dupx = vid.dupx;
-	navstatus.vid.dupy = vid.dupy;
+	navstatus.vid.dupx = vid.dup;
+	navstatus.vid.dupy = vid.dup;
 	navstatus.corners = cv_touchcorners.value;
 
 	navstatus.customizingcontrols = TS_IsCustomizingControls();
