@@ -1379,9 +1379,9 @@ void PT_FileFragment(SINT8 node, INT32 netconsole)
 
 	if (!(strcmp(filename, "srb2.pk3")
 		&& strcmp(filename, "zones.pk3")
-		&& strcmp(filename, "player.dta")
+		&& strcmp(filename, "characters.pk3")
 		&& strcmp(filename, "patch.pk3")
-		&& strcmp(filename, "music.dta")
+		&& strcmp(filename, "music.pk3")
 #ifdef USE_ANDROID_PK3
 		&& strcmp(filename, ANDROID_PK3_FILENAME)
 #endif

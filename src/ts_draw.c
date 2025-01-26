@@ -81,8 +81,8 @@
 static void DrawJoystickBacking(fixed_t padx, fixed_t pady, fixed_t padw, fixed_t padh, fixed_t scale, UINT8 color, INT32 flags)
 {
 	fixed_t x, y, w, h;
-	fixed_t dupx = vid.dup*FRACUNIT;
-	fixed_t dupy = vid.dup*FRACUNIT;
+	fixed_t dupx = vid.dupx*FRACUNIT;
+	fixed_t dupy = vid.dupy*FRACUNIT;
 	fixed_t xscale, yscale;
 	patch_t *backing = W_CachePatchLongName("JOY_BACKING", PU_PATCH);
 
@@ -111,8 +111,8 @@ static void DrawJoystickBacking(fixed_t padx, fixed_t pady, fixed_t padw, fixed_
 	yscale = FixedMul(FixedDiv(padh, backing->height*FRACUNIT), scale);
 
 	V_DrawStretchyFixedPatch(
-		((x + FixedDiv(w, 2 * FRACUNIT)) - (((backing->width * vid.dup) / 2) * xscale)),
-		((y + FixedDiv(h, 2 * FRACUNIT)) - (((backing->height * vid.dup) / 2) * yscale)),
+		((x + FixedDiv(w, 2 * FRACUNIT)) - (((backing->width * vid.dupx) / 2) * xscale)),
+		((y + FixedDiv(h, 2 * FRACUNIT)) - (((backing->height * vid.dupy) / 2) * yscale)),
 		xscale, yscale, flags, backing, colormap);
 }
 
@@ -124,8 +124,8 @@ static void DrawDPadButton(
 {
 	fixed_t offs = (3*FRACUNIT);
 
-	x *= BASEVIDWIDTH * vid.dup;
-	y *= BASEVIDHEIGHT * vid.dup;
+	x *= BASEVIDWIDTH * vid.dupx;
+	y *= BASEVIDHEIGHT * vid.dupy;
 
 	TS_CenterCoords(&x, &y);
 
@@ -148,8 +148,8 @@ static void DrawDPadButton(
 static void DrawDPad(fixed_t dpadx, fixed_t dpady, fixed_t dpadw, fixed_t dpadh, INT32 accent, INT32 flags, touchconfig_t *config, boolean backing)
 {
 	INT32 x, y, w, h;
-	fixed_t dupx = vid.dup * FRACUNIT;
-	fixed_t dupy = vid.dup * FRACUNIT;
+	fixed_t dupx = vid.dupx * FRACUNIT;
+	fixed_t dupy = vid.dupy * FRACUNIT;
 	fixed_t xscale, yscale;
 
 	touchconfig_t *tleft = &config[GC_STRAFELEFT];
@@ -244,8 +244,8 @@ static void DrawDPad(fixed_t dpadx, fixed_t dpady, fixed_t dpadw, fixed_t dpadh,
 static void DrawJoystick(fixed_t dpadx, fixed_t dpady, fixed_t dpadw, fixed_t dpadh, UINT8 color, INT32 flags)
 {
 	patch_t *cursor = W_CachePatchLongName("JOY_CURSOR", PU_PATCH);
-	fixed_t dupx = vid.dup*FRACUNIT;
-	fixed_t dupy = vid.dup*FRACUNIT;
+	fixed_t dupx = vid.dupx*FRACUNIT;
+	fixed_t dupy = vid.dupy*FRACUNIT;
 	fixed_t pressure = max(FRACUNIT/2, FRACUNIT - FloatToFixed(touchpressure));
 
 	// scale coords
@@ -294,14 +294,14 @@ static void DrawJoystick(fixed_t dpadx, fixed_t dpady, fixed_t dpadw, fixed_t dp
 
 	// Hole
 	V_DrawStretchyFixedPatch(
-		((x + FixedDiv(w, 2 * FRACUNIT)) - (((cursor->width * vid.dup) / 2) * (basescalex / 4))),
-		((y + FixedDiv(h, 2 * FRACUNIT)) - (((cursor->height * vid.dup) / 2) * (basescaley / 4))),
+		((x + FixedDiv(w, 2 * FRACUNIT)) - (((cursor->width * vid.dupx) / 2) * (basescalex / 4))),
+		((y + FixedDiv(h, 2 * FRACUNIT)) - (((cursor->height * vid.dupy) / 2) * (basescaley / 4))),
 		(basescalex / 4), (basescaley / 4), flags, cursor, NULL);
 
 	// Stick
 	V_DrawStretchyFixedPatch(
-		((x + FixedDiv(w, 2 * FRACUNIT)) - (((cursor->width * vid.dup) / 2) * xscale)) + (stickx * vid.dup),
-		((y + FixedDiv(h, 2 * FRACUNIT)) - (((cursor->height * vid.dup) / 2) * yscale)) + (sticky * vid.dup),
+		((x + FixedDiv(w, 2 * FRACUNIT)) - (((cursor->width * vid.dupx) / 2) * xscale)) + (stickx * vid.dupx),
+		((y + FixedDiv(h, 2 * FRACUNIT)) - (((cursor->height * vid.dupy) / 2) * yscale)) + (sticky * vid.dupy),
 		xscale, yscale, flags, cursor, colormap);
 }
 
@@ -315,9 +315,9 @@ static void DrawInputButton(touchconfig_t *config, INT32 gctype, const char *str
 	INT32 x, y, w, h;
 	INT32 ix, iy, ih, iw;
 	INT32 col, offs;
-	INT32 shadow = vid.dup;
-	fixed_t dupx = vid.dup * FRACUNIT;
-	fixed_t dupy = vid.dup * FRACUNIT;
+	INT32 shadow = vid.dupy;
+	fixed_t dupx = vid.dupx * FRACUNIT;
+	fixed_t dupy = vid.dupy * FRACUNIT;
 
 	if (!control->hidden)
 	{
@@ -363,7 +363,7 @@ static void DrawInputButton(touchconfig_t *config, INT32 gctype, const char *str
 		if (drawthin)
 		{
 			fixed_t thinoffs = (FRACUNIT / 2);
-			strwidth = ((V_ThinStringWidth(keystr, strflags) * vid.dup) * FRACUNIT) + thinoffs;
+			strwidth = ((V_ThinStringWidth(keystr, strflags) * vid.dupx) * FRACUNIT) + thinoffs;
 
 			// Still too long? Draw abbreviated name
 			if (((strwidth+2) >= w) && (!optkeystr))
@@ -372,7 +372,7 @@ static void DrawInputButton(touchconfig_t *config, INT32 gctype, const char *str
 				strwidth = V_StringWidth(keystr, strflags) * FRACUNIT;
 				drawthin = ((strwidth + (2 * FRACUNIT)) >= w);
 				if (drawthin)
-					strwidth = ((V_ThinStringWidth(keystr, strflags) * vid.dup) * FRACUNIT) + thinoffs;
+					strwidth = ((V_ThinStringWidth(keystr, strflags) * vid.dupx) * FRACUNIT) + thinoffs;
 			}
 		}
 
@@ -397,7 +397,7 @@ static void DrawInputButton(touchconfig_t *config, INT32 gctype, const char *str
 		strx -= (FixedMul(strwidth, strscale) / 2);
 
 		stry = (y + (h / 2));
-		stry -= (FixedMul(strheight, strscale * vid.dup) / 2);
+		stry -= (FixedMul(strheight, strscale * vid.dupy) / 2);
 		stry += (offs * FRACUNIT);
 
 		if (drawthin)
@@ -507,11 +507,11 @@ static void DrawNavigationButton(INT32 nav)
 	const INT32 alphalevel = cv_touchmenutrans.value;
 	const INT32 transflag = ((10-alphalevel)<<V_ALPHASHIFT);
 	const INT32 flags = (transflag | V_NOSCALESTART);
-	const INT32 shadow = vid.dup;
+	const INT32 shadow = vid.dupy;
 
 	fixed_t cx, cy, xscale, yscale;
-	fixed_t dupx = vid.dup*FRACUNIT;
-	fixed_t dupy = vid.dup*FRACUNIT;
+	fixed_t dupx = vid.dupx*FRACUNIT;
+	fixed_t dupy = vid.dupy*FRACUNIT;
 
 	INT32 x, y, w, h;
 	INT32 ix, iy, iw, ih;
@@ -553,8 +553,8 @@ static void DrawNavigationButton(INT32 nav)
 			if (pressure != FRACUNIT)
 				shadowf = FloatToFixed(1.0f - eased);
 
-			shadowx = FixedMul(4 * FRACUNIT * vid.dup, shadowf);
-			shadowy = FixedMul(4 * FRACUNIT * vid.dup, shadowf);
+			shadowx = FixedMul(4 * FRACUNIT * vid.dupx, shadowf);
+			shadowy = FixedMul(4 * FRACUNIT * vid.dupy, shadowf);
 
 			if (btnshadowmap == NULL)
 			{
@@ -564,15 +564,15 @@ static void DrawNavigationButton(INT32 nav)
 			}
 
 			V_DrawStretchyFixedPatch(
-				(((x + shadowx) + FixedDiv(w, 2 * FRACUNIT)) - (((patch->width * vid.dup) / 2) * xscale)),
-				(((y + shadowy) + FixedDiv(h, 2 * FRACUNIT)) - (((patch->height * vid.dup) / 2) * yscale)),
+				(((x + shadowx) + FixedDiv(w, 2 * FRACUNIT)) - (((patch->width * vid.dupx) / 2) * xscale)),
+				(((y + shadowy) + FixedDiv(h, 2 * FRACUNIT)) - (((patch->height * vid.dupy) / 2) * yscale)),
 				xscale, yscale, flags, patch, btnshadowmap);
 		}
 
 		// Draw button
 		V_DrawStretchyFixedPatch(
-			((x + FixedDiv(w, 2 * FRACUNIT)) - (((patch->width * vid.dup) / 2) * xscale)),
-			((y + FixedDiv(h, 2 * FRACUNIT)) - (((patch->height * vid.dup) / 2) * yscale)),
+			((x + FixedDiv(w, 2 * FRACUNIT)) - (((patch->width * vid.dupx) / 2) * xscale)),
+			((y + FixedDiv(h, 2 * FRACUNIT)) - (((patch->height * vid.dupy) / 2) * yscale)),
 			xscale, yscale, flags, patch, NULL);
 		return;
 	}
@@ -605,9 +605,9 @@ static void DrawNavigationButton(INT32 nav)
 
 		fixed_t strx = x, stry = y;
 		fixed_t strwidth = V_StringWidth(control->name, strflags) * FRACUNIT;
-		fixed_t strheight = FixedMul(8 * FRACUNIT, vid.fdup);
-		fixed_t hcorner = FixedMul(4 * FRACUNIT, vid.fdup);
-		fixed_t vcorner = FixedMul(4 * FRACUNIT, vid.fdup);
+		fixed_t strheight = FixedMul(8 * FRACUNIT, vid.fdupy);
+		fixed_t hcorner = FixedMul(4 * FRACUNIT, vid.fdupx);
+		fixed_t vcorner = FixedMul(4 * FRACUNIT, vid.fdupy);
 
 		if (snapflags & V_SNAPTOLEFT)
 			strx += hcorner;
@@ -647,7 +647,7 @@ static void DrawNavigationButton(INT32 nav)
 		if (!symb)
 			return;
 
-		font = hu_font.chars[toupper(symb) - HU_FONTSTART];
+		font = hu_font[toupper(symb) - HU_FONTSTART];
 		if (!font)
 			return;
 
@@ -660,10 +660,10 @@ static void DrawNavigationButton(INT32 nav)
 			xscale = yscale = FRACUNIT;
 
 		cx = x + (w / 2);
-		cx -= (font->width * vid.dup * xscale) / 2;
+		cx -= (font->width * vid.dupx * xscale) / 2;
 
 		cy = y + (h / 2);
-		cy -= (font->height * vid.dup * yscale) / 2;
+		cy -= (font->height * vid.dupy * yscale) / 2;
 		cy += (offs * FRACUNIT);
 
 		V_DrawStretchyFixedPatch(cx, cy, xscale, yscale, flags, font, NULL);
@@ -714,8 +714,8 @@ void TS_DrawFingers(void)
 	fixed_t w = FixedDiv(bw, pw);
 	fixed_t h = FixedDiv(bh, ph);
 
-	fixed_t xoffs = FixedMul(bw / 2, vid.fdup);
-	fixed_t yoffs = FixedMul(bh / 2, vid.fdup);
+	fixed_t xoffs = FixedMul(bw / 2, vid.fdupx);
+	fixed_t yoffs = FixedMul(bh / 2, vid.fdupy);
 
 	INT32 i;
 
