@@ -978,7 +978,6 @@ static touchbuttonname_t touchbuttonnames[] = {
 	{GC_FIRENORMAL, "F.NORMAL", "FRN"},
 	{GC_TOSSFLAG, "TOSSFLAG", "FLG"},
 	{GC_SPIN, "SPIN", "SPN"},
-    {GC_SHIELD, "SHIELD", "SHLD"},
 	{GC_CAMTOGGLE, "CHASECAM", "CHASE"},
 	{GC_CAMRESET, "RESET CAM", "R.CAM"},
 	{GC_LOOKUP, "LOOK UP", "L.UP"},
